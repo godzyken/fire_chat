@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">fire_chat</string>
+    <string name="facebook_app_id">180240783479525</string>
+    <string name="fb_login_protocol_scheme">fb180240783479525</string>
+</resources>

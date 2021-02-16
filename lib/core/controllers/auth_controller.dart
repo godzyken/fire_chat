@@ -8,6 +8,7 @@ import 'package:fire_chat/ui/ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simple_gravatar/simple_gravatar.dart';
@@ -20,6 +21,7 @@ class AuthController extends GetxController {
   final passwordController = TextEditingController().obs;
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+
   Rx<User> firebaseUser = Rx<User>();
   Rx<UserModel> firestoreUser = Rx<UserModel>();
 
@@ -50,9 +52,9 @@ class AuthController extends GetxController {
     }
 
     if (_firebaseUser == null) {
-      Get.offAll(SignInUI());
+      Get.to(() => SignInUI());
     } else {
-      Get.offAll(HomeUI());
+      Get.to(() => HomeUI());
     }
   }
 
@@ -143,13 +145,41 @@ class AuthController extends GetxController {
 
     try {
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-      final GoogleSignInAuthentication googleAuth =
-      await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
           idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
       final userCred = (await _auth
           .signInWithCredential(credential)
-          .then((value) => Get.offAll(HomeUI())));
+          .then((value) => Get.to(() => HomeUI())));
+      firebaseUser = userCred.user;
+
+      update();
+
+      hideLoadingIndicator();
+    } catch (error) {
+      hideLoadingIndicator();
+      Get.snackbar(labels.auth.signInErrorTitle, labels.auth.signInError,
+          snackPosition: SnackPosition.BOTTOM,
+          duration: Duration(seconds: 7),
+          backgroundColor: Get.theme.snackBarTheme.backgroundColor,
+          colorText: Get.theme.snackBarTheme.actionTextColor);
+    }
+  }
+
+  //Method to handle user sign in using facebook_sign_in
+  facebookSignIn(BuildContext context) async {
+    final _auth = FirebaseAuth.instance;
+    final labels = AppLocalizations.of(context);
+    showLoadingIndicator();
+
+    try {
+      final AccessToken accessToken = await FacebookAuth.instance.login();
+      final FacebookAuthCredential credential = FacebookAuthProvider.credential(
+        accessToken.token
+      );
+      final userCred = (await _auth
+          .signInWithCredential(credential)
+          .then((value) => Get.to(() => HomeUI())));
       firebaseUser = userCred.user;
 
       update();
@@ -261,7 +291,7 @@ class AuthController extends GetxController {
 
   // Google_sign_out
   Future<void> _googleSignOut() async {
-    await _googleSignIn.signOut().then((value) => Get.offAll(SignUpUI()));
+    await _googleSignIn.signOut().then((value) => Get.to(() => SignUpUI()));
   }
 
   // Sign out

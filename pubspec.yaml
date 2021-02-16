@@ -32,10 +32,12 @@ dependencies:
   get:
   firebase_auth:
   google_sign_in:
+  flutter_facebook_auth:
   simple_gravatar:
   get_storage:
   font_awesome_flutter:
   flutter_sheet_localization:
+  splashscreen:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -51,7 +53,7 @@ dev_dependencies:
     sdk: flutter
 
 dependency_overrides:
-  intl:
+  intl: ^0.17.0-nullsafety.2
   analyzer:
 
 # For information on the generic Dart part of this file, see the
@@ -66,9 +68,30 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/
+    - assets/img/default.png
+    - assets/img/defaultDark.png
+    - assets/img/google_logo.png
+    - assets/img/facebook_logo.png
+    - assets/img/marlonW.jpg
+    - assets/img/nunchaku.png
+    - assets/avatar/gaïmaito.jpg
+    - assets/AndroidRobot.gif
+    - assets/Andy.svg.svg
+    - assets/ArcticFox.gif
+    - assets/copertina.jpg
+    - assets/earth.jpg
+    - assets/earth (2).jpg
+    - assets/earth_augmented_image.jpg
+    - assets/fox_face_mesh_texture.png
+    - assets/myimages.imgdb
+    - assets/prova_texture.png
+    - assets/TocoToucan.gif
+    - assets/topolino.jpg
+    - assets/umano_digitale.png
+    - assets/venom.jpg
+    - assets/venom_with_eyes.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

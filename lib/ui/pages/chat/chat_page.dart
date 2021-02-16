@@ -1,5 +1,4 @@
 import 'package:fire_chat/core/models/models.dart';
-import 'package:fire_chat/core/models/user.dart';
 import 'package:fire_chat/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 

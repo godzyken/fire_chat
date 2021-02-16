@@ -75,7 +75,7 @@ class UpdateProfileUI extends StatelessWidget {
                   FormVerticalSpace(),
                   LabelButton(
                     labelText: labels?.auth?.resetPasswordLabelButton,
-                    onPressed: () => Get.to(ResetPasswordUI()),
+                    onPressed: () => Get.to(() => ResetPasswordUI()),
                   ),
                 ],
               ),

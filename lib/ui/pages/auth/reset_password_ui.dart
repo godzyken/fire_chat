@@ -71,7 +71,7 @@ class ResetPasswordUI extends StatelessWidget {
         (authController.emailController.value.text == null)) {
       return LabelButton(
         labelText: labels?.auth?.signInonResetPasswordLabelButton,
-        onPressed: () => Get.offAll(SignInUI()),
+        onPressed: () => Get.to(() => SignInUI()),
       );
     }
     return Container(width: 0, height: 0);

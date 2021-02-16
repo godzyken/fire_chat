@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ProfileHeaderWidget extends StatelessWidget {
   final String name;
@@ -10,46 +11,49 @@ class ProfileHeaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    height: 80,
-    padding: EdgeInsets.all(16).copyWith(left: 0),
-    child: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        height: 80,
+        padding: EdgeInsets.all(16).copyWith(left: 0),
+        child: Column(
           children: [
-            BackButton(color: Colors.white),
-            Expanded(
-              child: Text(
-                name,
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
             Row(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                buildIcon(Icons.call),
-                SizedBox(width: 12),
-                buildIcon(Icons.videocam),
+                BackButton(
+                  color: Colors.white,
+                  onPressed: () => Get.back(closeOverlays: true),
+                ),
+                Expanded(
+                  child: Text(
+                    name,
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    buildIcon(Icons.call),
+                    SizedBox(width: 12),
+                    buildIcon(Icons.videocam),
+                  ],
+                ),
+                SizedBox(width: 4),
               ],
-            ),
-            SizedBox(width: 4),
+            )
           ],
-        )
-      ],
-    ),
-  );
+        ),
+      );
 
   Widget buildIcon(IconData icon) => Container(
-    padding: EdgeInsets.all(5),
-    decoration: BoxDecoration(
-      shape: BoxShape.circle,
-      color: Colors.white54,
-    ),
-    child: Icon(icon, size: 25, color: Colors.white),
-  );
+        padding: EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white54,
+        ),
+        child: Icon(icon, size: 25, color: Colors.white),
+      );
 }

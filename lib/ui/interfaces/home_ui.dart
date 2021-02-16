@@ -1,13 +1,11 @@
 
 import 'package:fire_chat/core/controllers/controllers.dart';
-import 'package:fire_chat/core/models/user.dart';
 import 'package:fire_chat/localizations.dart';
 import 'package:fire_chat/ui/interfaces/interfaces.dart';
 import 'package:fire_chat/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// import 'pages/pages_ui.dart';
 
 class HomeUI extends StatefulWidget {
   @override
@@ -38,7 +36,7 @@ class _HomeUIState extends State<HomeUI> {
                   IconButton(
                       icon: Icon(Icons.settings),
                       onPressed: () {
-                        Get.to(SettingsUI());
+                        Get.to(() => SettingsUI());
                       }),
                 ],
                 automaticallyImplyLeading: true,
@@ -62,12 +60,10 @@ class _HomeUIState extends State<HomeUI> {
                             style: TextStyle(fontSize: 16)),
                       ),
                     ),
-                    //TODO Générer la traduction
-                    //TODO Créér les routes
                     ListTile(
                       title: Text('My Files'),
                       leading: Icon(Icons.folder),
-                      onTap: () => Get.to(ChatPage(user: controller.firestoreUser.value)),
+                      onTap: () => Get.to(() => ChatPage(user: controller.firestoreUser.value)),
                     ),
                     ListTile(
                       title: Text('Contact list'),
@@ -96,7 +92,6 @@ class _HomeUIState extends State<HomeUI> {
                       onTap: () {
                         print("Clicked");
                       },
-                      // onTap: () => Get.to(TestAr()),
                     ),
                     ListTile(
                       title: Text('Uploads'),

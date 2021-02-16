@@ -70,14 +70,21 @@ class SignInUI extends StatelessWidget {
                     authController.googleSignIn(context);
                   },
                 ),
+                FacebookSignInButton(
+                  labelText: labels?.auth?.googleSignInButton,
+                  onPressed: () async {
+                    SystemChannels.textInput.invokeMapMethod('TextInput.hide');
+                    authController.facebookSignIn(context);
+                  },
+                ),
                 FormVerticalSpace(),
                 LabelButton(
                   labelText: labels?.auth?.resetPasswordLabelButton,
-                  onPressed: () => Get.to(ResetPasswordUI()),
+                  onPressed: () => Get.to(() => ResetPasswordUI()),
                 ),
                 LabelButton(
                   labelText: labels?.auth?.signUpLabelButton,
-                  onPressed: () => Get.to(SignUpUI()),
+                  onPressed: () => Get.to(() => SignUpUI()),
                 ),
               ],
             ),

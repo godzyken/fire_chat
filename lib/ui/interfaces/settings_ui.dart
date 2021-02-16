@@ -31,7 +31,7 @@ class SettingsUI extends StatelessWidget {
             title: Text(labels.settings.updateProfile),
             trailing: ElevatedButton(
               onPressed: () async {
-                Get.to(UpdateProfileUI());
+                Get.to(() => UpdateProfileUI());
               },
               child: Text(
                 labels.settings.updateProfile,

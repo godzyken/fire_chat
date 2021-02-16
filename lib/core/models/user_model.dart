@@ -43,7 +43,6 @@ class UserModel {
       email: data['email'] ?? '',
       name: data['name'] ?? '',
       photoUrl: data['photoUrl'] ?? '',
-      lastMessageTime: Utils.toDateTime(data['lastMessageTime'] ?? ''),
     );
   }
 
@@ -67,7 +66,6 @@ class UserModel {
       name: snap.reference.path,
       email: snap.reference.path,
       photoUrl: snap.reference.path,
-      lastMessageTime: Utils.toDateTime(snap.data()['lastMessageTime']),
     );
   }
 

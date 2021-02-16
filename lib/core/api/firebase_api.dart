@@ -29,7 +29,7 @@ class FirebaseApi {
       message: message,
       createdAt: DateTime.now(),
     );
-    await refMessages.add(newMessage.toJson());
+                                                                                                                                                                                                                                                                                 await refMessages.add(newMessage.toJson());
 
     final refUsers = FirebaseFirestore.instance.collection('users');
     await refUsers
