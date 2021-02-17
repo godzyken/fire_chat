@@ -9,9 +9,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simple_gravatar/simple_gravatar.dart';
+
 
 class AuthController extends GetxController {
   static AuthController to = Get.find();
@@ -20,7 +22,10 @@ class AuthController extends GetxController {
   final emailController = TextEditingController().obs;
   final passwordController = TextEditingController().obs;
 
+  final fb = FacebookLogin();
+
   final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
+  final FacebookAuth _facebookAuth = FacebookAuth.instance;
 
   Rx<User> firebaseUser = Rx<User>();
   Rx<UserModel> firestoreUser = Rx<UserModel>();
@@ -32,13 +37,12 @@ class AuthController extends GetxController {
 
   //Streams the firestore user from the firestore collection
   Stream<UserModel> streamFirestoreUser() {
-
-    print('streamFirestoreUser()');
     if (firebaseUser?.value?.uid != null) {
+      print(firebaseUser.value.uid);
       return FirebaseFirestore.instance
           .doc('/users/${firebaseUser.value.uid}')
           .snapshots()
-          .map((snapshot) => UserModel.fromMap(snapshot.data()));
+          .map((snapshot) => UserModel.fromJson(snapshot.data()));
     }
 
     return null;
@@ -86,8 +90,8 @@ class AuthController extends GetxController {
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-          email: emailController.value.text,
-          password: passwordController.value.text)
+              email: emailController.value.text,
+              password: passwordController.value.text)
           .then((result) async {
         print('uID: ' + result.user.uid);
         print('email: ' + result.user.email);
@@ -101,17 +105,18 @@ class AuthController extends GetxController {
         );
         //create the new user object
         UserModel _newUser = UserModel(
-            uid: result.user.uid,
-            email: result.user.email,
-            name: nameController.value.text,
-            photoUrl: gravatarUrl);
+          uid: result.user.uid,
+          email: result.user.email,
+          name: nameController.value.text,
+          lastMessageTime: DateTime.now(),
+          photoUrl: gravatarUrl,
+        );
         //create the user in firestore
         _createUserFirestore(_newUser, result.user);
         emailController.value.clear();
         passwordController.value.clear();
         hideLoadingIndicator();
       });
-
     } catch (error) {
       hideLoadingIndicator();
       Get.snackbar(labels.auth.signUpErrorTitle, error.message,
@@ -124,10 +129,11 @@ class AuthController extends GetxController {
 
   //check if user is an admin user
   isAdmin() async {
-
     await getUser.then((user) async {
-      DocumentSnapshot adminRef =
-      await FirebaseFirestore.instance.collection('admin').doc(user.uid).get();
+      DocumentSnapshot adminRef = await FirebaseFirestore.instance
+          .collection('admin')
+          .doc(user.uid)
+          .get();
       if (adminRef.exists) {
         admin.value = true;
       } else {
@@ -145,46 +151,39 @@ class AuthController extends GetxController {
 
     try {
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
           idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
-      final userCred = (await _auth
+
+      await _auth
           .signInWithCredential(credential)
-          .then((value) => Get.to(() => HomeUI())));
-      firebaseUser = userCred.user;
+          .then((result) async {
+        print('uID: ' + result.user.uid);
+        print('email: ' + result.user.email);
+        //get photo url from gravatar if user has one
+        Gravatar gravatar = Gravatar(result.user.photoURL);
+        String gravatarUrl = gravatar.imageUrl(
+          size: 200,
+          defaultImage: GravatarImage.retro,
+          rating: GravatarRating.pg,
+          fileExtension: true,
+        );
+        //create the new user object
+        UserModel _newUser = UserModel(
+          uid: result.user.uid,
+          email: result.user.email,
+          name: result.user.displayName,
+          lastMessageTime: DateTime.now(),
+          photoUrl: gravatarUrl,
+        );
+        //create the user in firestore
+        _createUserFirestore(_newUser, result.user);
 
-      update();
+        update();
 
-      hideLoadingIndicator();
-    } catch (error) {
-      hideLoadingIndicator();
-      Get.snackbar(labels.auth.signInErrorTitle, labels.auth.signInError,
-          snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 7),
-          backgroundColor: Get.theme.snackBarTheme.backgroundColor,
-          colorText: Get.theme.snackBarTheme.actionTextColor);
-    }
-  }
-
-  //Method to handle user sign in using facebook_sign_in
-  facebookSignIn(BuildContext context) async {
-    final _auth = FirebaseAuth.instance;
-    final labels = AppLocalizations.of(context);
-    showLoadingIndicator();
-
-    try {
-      final AccessToken accessToken = await FacebookAuth.instance.login();
-      final FacebookAuthCredential credential = FacebookAuthProvider.credential(
-        accessToken.token
-      );
-      final userCred = (await _auth
-          .signInWithCredential(credential)
-          .then((value) => Get.to(() => HomeUI())));
-      firebaseUser = userCred.user;
-
-      update();
-
-      hideLoadingIndicator();
+        hideLoadingIndicator();
+      });
     } catch (error) {
       hideLoadingIndicator();
       Get.snackbar(labels.auth.signInErrorTitle, labels.auth.signInError,
@@ -204,28 +203,36 @@ class AuthController extends GetxController {
     } else {
       return Icon(Icons.account_circle, size: 100);
     }
-
   }
 
-  // Firebase user one-time fetch
+// Firebase user one-time fetch
   Future<User> get getUser async {
     return FirebaseAuth.instance.currentUser;
   }
-  //get the firestore user from the firestore collection
-  Future<UserModel> getFirestoreUser() {
 
+// Future data one_time fetch
+  Future getData(String collection) async {
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection(collection).get();
+    return snapshot.docs;
+  }
+
+//get the firestore user from the firestore collection
+  Future<UserModel> getFirestoreUser() {
     if (firebaseUser.value?.uid != null) {
-      return FirebaseFirestore.instance.doc('/users/${firebaseUser.value.uid}').get().then(
-              (documentSnapshot) => UserModel.fromMap(documentSnapshot.data()));
+      return FirebaseFirestore.instance
+          .doc('/users/${firebaseUser.value.uid}')
+          .get()
+          .then((documentSnapshot) =>
+              UserModel.fromJson(documentSnapshot.data()));
     }
     update();
     return null;
   }
 
-  //handles updating the user when updating profile
+//handles updating the user when updating profile
   Future<void> updateUser(BuildContext context, UserModel user, String oldEmail,
       String password) async {
-
     final labels = AppLocalizations.of(context);
     try {
       showLoadingIndicator();
@@ -265,12 +272,13 @@ class AuthController extends GetxController {
     }
   }
 
-  //password reset email
+//password reset email
   Future<void> sendPasswordResetEmail(BuildContext context) async {
     final labels = AppLocalizations.of(context);
     showLoadingIndicator();
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: emailController.value.text);
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: emailController.value.text);
       hideLoadingIndicator();
       Get.snackbar(
           labels.auth.resetPasswordNoticeTitle, labels.auth.resetPasswordNotice,
@@ -289,30 +297,34 @@ class AuthController extends GetxController {
     }
   }
 
-  // Google_sign_out
+// Google_sign_out
   Future<void> _googleSignOut() async {
-    await _googleSignIn.signOut().then((value) => Get.to(() => SignUpUI()));
+    await _googleSignIn.signOut().then((value) => Get.offAll(() => SignUpUI()));
   }
 
-  // Sign out
+// Sign out
   Future<void> signOut() {
     nameController.value.clear();
     emailController.value.clear();
     passwordController.value.clear();
     _googleSignOut();
+    _facebookAuth.logOut();
     return FirebaseAuth.instance.signOut();
   }
 
-  //updates the firestore user in users collection
+//updates the firestore user in users collection
   void _updateUserFirestore(UserModel user, User _firebaseUser) {
-
-    FirebaseFirestore.instance.doc('/users/${_firebaseUser.uid}').update(user.toJson());
+    FirebaseFirestore.instance
+        .doc('/users/${_firebaseUser.uid}')
+        .update(user.toJson());
     update();
   }
 
-  //create the firestore user in users collection
+//create the firestore user in users collection
   void _createUserFirestore(UserModel user, User _firebaseUser) {
-    FirebaseFirestore.instance.doc('/users/${_firebaseUser.uid}').set(user.toJson());
+    FirebaseFirestore.instance
+        .doc('/users/${_firebaseUser.uid}')
+        .set(user.toJson());
     update();
   }
 
@@ -333,5 +345,4 @@ class AuthController extends GetxController {
     passwordController.value?.dispose();
     super.onClose();
   }
-
 }

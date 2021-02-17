@@ -33,6 +33,7 @@ dependencies:
   firebase_auth:
   google_sign_in:
   flutter_facebook_auth:
+  flutter_login_facebook:
   simple_gravatar:
   get_storage:
   font_awesome_flutter:

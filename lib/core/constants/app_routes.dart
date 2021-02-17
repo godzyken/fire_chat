@@ -9,6 +9,7 @@ class AppRoutes {
     GetPage(name: '/', page: () => SplashUI()),
     GetPage(name: '/sign-in', page: () => SignInUI()),
     GetPage(name: '/sign-up', page: () => SignUpUI()),
+    GetPage(name: '/login-selector', page: () => LoginSelectorUi()),
     GetPage(name: '/home', page: () => HomeUI()),
     GetPage(name: '/settings', page: () => SettingsUI()),
     GetPage(name: '/reset-password', page: () => ResetPasswordUI()),

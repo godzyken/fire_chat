@@ -16,7 +16,7 @@ class FirebaseApi {
       .collection('users')
       .orderBy(UserModelField.lastMessageTime, descending: true)
       .snapshots()
-      .transform(Utils.transformer(UserModel.fromJson2));
+      .transform(Utils.transformer(UserModel.fromJson));
 
   static Future uploadMessage(String idUser, String message) async {
     final refMessages =
@@ -34,7 +34,7 @@ class FirebaseApi {
     final refUsers = FirebaseFirestore.instance.collection('users');
     await refUsers
         .doc(idUser)
-        .update({UserField.lastMessageTime: DateTime.now()});
+        .update({UserModelField.lastMessageTime: DateTime.now()});
   }
 
   static Stream<List<Message>> getMessages(String idUser) =>
@@ -48,7 +48,7 @@ class FirebaseApi {
     final refUsers = FirebaseFirestore.instance.collection('users');
 
     final allUsers = await refUsers.get();
-    if (allUsers.size != 0) {
+    if (allUsers.size == 0) {
       return;
     } else {
       for (final user in users) {

@@ -1,4 +1,3 @@
-
 import 'package:fire_chat/core/controllers/controllers.dart';
 import 'package:fire_chat/core/helpers/helpers.dart';
 import 'package:fire_chat/localizations.dart';
@@ -35,7 +34,7 @@ class SignUpUI extends StatelessWidget {
                     validator: Validator(labels).name,
                     onChanged: (value) => null,
                     onSaved: (value) =>
-                    authController.nameController.value.text = value,
+                        authController.nameController.value.text = value,
                   ),
                   FormVerticalSpace(),
                   FormInputFieldWithIcon(
@@ -46,7 +45,7 @@ class SignUpUI extends StatelessWidget {
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (value) => null,
                     onSaved: (value) =>
-                    authController.emailController.value.text = value,
+                        authController.emailController.value.text = value,
                   ),
                   FormVerticalSpace(),
                   FormInputFieldWithIcon(
@@ -57,7 +56,7 @@ class SignUpUI extends StatelessWidget {
                     obscureText: true,
                     onChanged: (value) => null,
                     onSaved: (value) =>
-                    authController.passwordController.value.text = value,
+                        authController.passwordController.value.text = value,
                     maxLines: 1,
                   ),
                   FormVerticalSpace(),

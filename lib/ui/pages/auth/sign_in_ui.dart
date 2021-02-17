@@ -5,11 +5,13 @@ import 'package:fire_chat/ui/components/components.dart';
 import 'package:fire_chat/ui/pages/auth/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:get/get.dart';
 
 class SignInUI extends StatelessWidget {
   final AuthController authController = AuthController.to;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final plugin = FacebookLogin(debug: true);
 
   Widget build(BuildContext context) {
     final labels = AppLocalizations.of(context);
@@ -72,10 +74,11 @@ class SignInUI extends StatelessWidget {
                 ),
                 FacebookSignInButton(
                   labelText: labels?.auth?.googleSignInButton,
-                  onPressed: () async {
+/*                  onPressed: () async {
                     SystemChannels.textInput.invokeMapMethod('TextInput.hide');
                     authController.facebookSignIn(context);
-                  },
+                  },*/
+                onPressed: () => Get.offAll(() => LoginSelectorUi(plugin: plugin)),
                 ),
                 FormVerticalSpace(),
                 LabelButton(
@@ -84,7 +87,7 @@ class SignInUI extends StatelessWidget {
                 ),
                 LabelButton(
                   labelText: labels?.auth?.signUpLabelButton,
-                  onPressed: () => Get.to(() => SignUpUI()),
+                  onPressed: () => Get.offAll(() => SignUpUI()),
                 ),
               ],
             ),
