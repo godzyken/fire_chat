@@ -1,15 +1,16 @@
-
 import 'dart:io';
 import 'package:fire_chat/ui/interfaces/interfaces.dart';
+import 'package:fire_chat/ui/pages/auth/auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 
-
 class LoginSelectorUi extends StatefulWidget {
   final FacebookLogin plugin;
 
-  const LoginSelectorUi({Key key, @required this.plugin}) : assert(plugin != null), super(key: key);
+  const LoginSelectorUi({Key key, @required this.plugin})
+      : assert(plugin != null),
+        super(key: key);
 
   @override
   _LoginSelectorUiState createState() => _LoginSelectorUiState();
@@ -36,7 +37,13 @@ class _LoginSelectorUiState extends State<LoginSelectorUi> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login via Facebook example'),
-
+        actions: [
+          IconButton(
+            icon: Icon(Icons.arrow_back_outlined),
+            tooltip: 'Open shopping cart',
+            onPressed: () => Get.back(closeOverlays: true, result: Get.off(() => SignInUI())),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 8.0),
@@ -51,13 +58,13 @@ class _LoginSelectorUiState extends State<LoginSelectorUi> {
                 ),
               isLogin
                   ? OutlinedButton(
-                child: const Text('Log Out'),
-                onPressed: _onPressedLogOutButton,
-              )
+                      child: const Text('Log Out'),
+                      onPressed: _onPressedLogOutButton,
+                    )
                   : OutlinedButton(
-                child: const Text('Log In'),
-                onPressed: _onPressedLogInButton,
-              ),
+                      child: const Text('Log In'),
+                      onPressed: _onPressedLogInButton,
+                    ),
               if (!isLogin && Platform.isAndroid)
                 OutlinedButton(
                   child: const Text('Express Log In'),
@@ -104,7 +111,7 @@ class _LoginSelectorUiState extends State<LoginSelectorUi> {
       FacebookPermission.publicProfile,
       FacebookPermission.email,
     ]);
-    await _updateLoginInfo().then((value) => Get.offAll(() => HomeUI()));
+    await _updateLoginInfo();
   }
 
   Future<void> _onPressedExpressLogInButton(BuildContext context) async {

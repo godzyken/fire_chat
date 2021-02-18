@@ -1,3 +1,4 @@
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fire_chat/core/models/models.dart';
@@ -14,7 +15,6 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simple_gravatar/simple_gravatar.dart';
 
-
 class AuthController extends GetxController {
   static AuthController to = Get.find();
   AppLocalizations_Labels labels;
@@ -22,7 +22,7 @@ class AuthController extends GetxController {
   final emailController = TextEditingController().obs;
   final passwordController = TextEditingController().obs;
 
-  final fb = FacebookLogin();
+  final FacebookLogin plugin = FacebookLogin();
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
   final FacebookAuth _facebookAuth = FacebookAuth.instance;
@@ -34,6 +34,12 @@ class AuthController extends GetxController {
 
   // Firebase user a realtime stream
   Stream<User> get user => FirebaseAuth.instance.authStateChanges();
+
+  String _sdkVersion;
+  FacebookAccessToken _token;
+  FacebookUserProfile _profile;
+  String _email;
+  String _imageUrl;
 
   //Streams the firestore user from the firestore collection
   Stream<UserModel> streamFirestoreUser() {
@@ -156,9 +162,7 @@ class AuthController extends GetxController {
       final AuthCredential credential = GoogleAuthProvider.credential(
           idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
-      await _auth
-          .signInWithCredential(credential)
-          .then((result) async {
+      await _auth.signInWithCredential(credential).then((result) async {
         print('uID: ' + result.user.uid);
         print('email: ' + result.user.email);
         //get photo url from gravatar if user has one
@@ -194,6 +198,89 @@ class AuthController extends GetxController {
     }
   }
 
+  //Method to handle user sign in using facebook_sign_in
+  facebookSignIn(BuildContext context) async {
+    final _auth = FirebaseAuth.instance;
+    final labels = AppLocalizations.of(context);
+    bool isExpress;
+
+    showLoadingIndicator();
+
+    try {
+      if (isExpress != false) {
+        print('bonjouww!!');
+        await to.plugin.logIn(permissions: [
+          FacebookPermission.publicProfile,
+          FacebookPermission.email
+        ]).then((result) async {
+          await _auth
+              .signInWithCredential(
+                  FacebookAuthProvider.credential(result.accessToken.token))
+              .then((result) async {
+            print('uID: ' + result.user.uid);
+            print('email: ' + result.user.email);
+            //get photo url from gravatar if user has one
+            Gravatar gravatar = Gravatar(result.user.photoURL);
+            String gravatarUrl = gravatar.imageUrl(
+              size: 200,
+              defaultImage: GravatarImage.retro,
+              rating: GravatarRating.pg,
+              fileExtension: true,
+            );
+            //create the new user object
+            UserModel _newUser = UserModel(
+              uid: result.user.uid,
+              email: result.user.email,
+              name: result.user.displayName,
+              lastMessageTime: DateTime.now(),
+              photoUrl: gravatarUrl,
+            );
+            //create the user in firestore
+            _createUserFirestore(_newUser, result.user);
+
+            update();
+
+            hideLoadingIndicator();
+          });
+        });
+        await _updateUserFbInfo();
+      } else {
+        print('hello');
+        final res = await to.plugin.expressLogin();
+        if (res.status == FacebookLoginStatus.success) {
+          await _updateUserFbInfo();
+        } else {
+          hideLoadingIndicator();
+          Get.snackbar("Can't make express log in. Try regular log in.",
+              labels.auth.signInError,
+              snackPosition: SnackPosition.BOTTOM,
+              duration: Duration(seconds: 7),
+              backgroundColor: Get.theme.snackBarTheme.backgroundColor,
+              colorText: Get.theme.snackBarTheme.actionTextColor);
+        }
+      }
+    } catch (error) {
+      hideLoadingIndicator();
+      Get.snackbar(labels.auth.signInErrorTitle, labels.auth.signInError,
+          snackPosition: SnackPosition.BOTTOM,
+          duration: Duration(seconds: 7),
+          backgroundColor: Get.theme.snackBarTheme.backgroundColor,
+          colorText: Get.theme.snackBarTheme.actionTextColor);
+    }
+  }
+
+  //Method to handle user info facebook
+  buildUserInfo(BuildContext context, FacebookUserProfile profile,
+      FacebookAccessToken accessToken, String email) async {
+    try {
+      final UserModel userModel = UserModel(
+          email: email,
+          name: profile.name,
+          photoUrl: null,
+          lastMessageTime: null);
+    } catch (error) {}
+  }
+
   // Get PhotoUrl for Profile avatar
   getPhotoUrl() {
     final _auth = FirebaseAuth.instance;
@@ -205,19 +292,49 @@ class AuthController extends GetxController {
     }
   }
 
-// Firebase user one-time fetch
+  Future<void> _updateUserFbInfo() async {
+    final plugin = to.plugin;
+    final token = await plugin.accessToken;
+    FacebookUserProfile profile;
+    String email;
+    String imageUrl;
+
+    if (token != null) {
+      profile = await plugin.getUserProfile();
+      if (token.permissions?.contains(FacebookPermission.email.name) ?? false) {
+        email = await plugin.getUserEmail();
+      }
+      imageUrl = await plugin.getProfileImageUrl(width: 100);
+    }
+
+    _token = token;
+    _profile = profile;
+    _email = email;
+    _imageUrl = imageUrl;
+
+    final UserModel userModel = UserModel(
+      uid: _profile.userId,
+      email: _email,
+      name: _profile.name,
+      photoUrl: _imageUrl,
+      lastMessageTime: DateTime.now(),
+    );
+    _createUserFirestore(userModel, firebaseUser.value);
+  }
+
+  // Firebase user one-time fetch
   Future<User> get getUser async {
     return FirebaseAuth.instance.currentUser;
   }
 
-// Future data one_time fetch
+  // Future data one_time fetch
   Future getData(String collection) async {
     QuerySnapshot snapshot =
         await FirebaseFirestore.instance.collection(collection).get();
     return snapshot.docs;
   }
 
-//get the firestore user from the firestore collection
+  //get the firestore user from the firestore collection
   Future<UserModel> getFirestoreUser() {
     if (firebaseUser.value?.uid != null) {
       return FirebaseFirestore.instance
@@ -230,7 +347,7 @@ class AuthController extends GetxController {
     return null;
   }
 
-//handles updating the user when updating profile
+  //handles updating the user when updating profile
   Future<void> updateUser(BuildContext context, UserModel user, String oldEmail,
       String password) async {
     final labels = AppLocalizations.of(context);
@@ -272,7 +389,7 @@ class AuthController extends GetxController {
     }
   }
 
-//password reset email
+  //password reset email
   Future<void> sendPasswordResetEmail(BuildContext context) async {
     final labels = AppLocalizations.of(context);
     showLoadingIndicator();
@@ -297,12 +414,18 @@ class AuthController extends GetxController {
     }
   }
 
-// Google_sign_out
+  // Google_sign_out
   Future<void> _googleSignOut() async {
     await _googleSignIn.signOut().then((value) => Get.offAll(() => SignUpUI()));
   }
 
-// Sign out
+  // Check SdkVersion
+  Future<void> _getSdkVersion() async {
+    final sdkVersion = await to.plugin.sdkVersion;
+    _sdkVersion = sdkVersion;
+  }
+
+  // Sign out
   Future<void> signOut() {
     nameController.value.clear();
     emailController.value.clear();
@@ -312,7 +435,7 @@ class AuthController extends GetxController {
     return FirebaseAuth.instance.signOut();
   }
 
-//updates the firestore user in users collection
+  //updates the firestore user in users collection
   void _updateUserFirestore(UserModel user, User _firebaseUser) {
     FirebaseFirestore.instance
         .doc('/users/${_firebaseUser.uid}')
@@ -320,7 +443,7 @@ class AuthController extends GetxController {
     update();
   }
 
-//create the firestore user in users collection
+  //create the firestore user in users collection
   void _createUserFirestore(UserModel user, User _firebaseUser) {
     FirebaseFirestore.instance
         .doc('/users/${_firebaseUser.uid}')
@@ -331,6 +454,8 @@ class AuthController extends GetxController {
   @override
   void onReady() async {
     //run every time auth state changes
+    _updateUserFbInfo();
+    _getSdkVersion();
 
     ever(firebaseUser, handleAuthChanged);
     firebaseUser.value = await getUser;

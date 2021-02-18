@@ -2,6 +2,7 @@ import 'package:fire_chat/core/models/models.dart';
 import 'package:fire_chat/core/models/user.dart';
 import 'package:fire_chat/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ChatBodyWidget extends StatelessWidget {
   final List<UserModel> users;
@@ -34,11 +35,7 @@ class ChatBodyWidget extends StatelessWidget {
       return Container(
         height: 75,
         child: ListTile(
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ChatPage(user: user),
-            ));
-          },
+          onTap: () => Get.offAll(ChatPage(user: user)),
           leading: CircleAvatar(
             radius: 25,
             backgroundImage: NetworkImage(user.photoUrl),

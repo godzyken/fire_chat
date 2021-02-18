@@ -2,10 +2,11 @@
 import 'package:flutter/material.dart';
 
 class FacebookSignInButton extends StatelessWidget {
-  FacebookSignInButton({this.labelText, this.onPressed});
+  FacebookSignInButton({this.labelText, this.onPressed, this.isExpress});
 
   final String labelText;
   final void Function() onPressed;
+  final bool isExpress;
 
   @override
   Widget build(BuildContext context) {
