@@ -1,8 +1,9 @@
 import 'package:fire_chat/core/api/api.dart';
+import 'package:fire_chat/core/models/models.dart';
 import 'package:flutter/material.dart';
 
 class NewMessageWidget extends StatefulWidget {
-  final String idUser;
+  final UserModel idUser;
 
   const NewMessageWidget({
     @required this.idUser,

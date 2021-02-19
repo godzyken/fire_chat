@@ -42,7 +42,7 @@ class SignInUI extends StatelessWidget {
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (value) => null,
                   onSaved: (value) =>
-                  authController.emailController.value.text = value,
+                      authController.emailController.value.text = value,
                 ),
                 FormVerticalSpace(),
                 FormInputFieldWithIcon(
@@ -53,7 +53,7 @@ class SignInUI extends StatelessWidget {
                   obscureText: true,
                   onChanged: (value) => null,
                   onSaved: (value) =>
-                  authController.passwordController.value.text = value,
+                      authController.passwordController.value.text = value,
                   maxLines: 1,
                 ),
                 FormVerticalSpace(),
@@ -74,11 +74,12 @@ class SignInUI extends StatelessWidget {
                 ),
                 FacebookSignInButton(
                   labelText: labels?.auth?.googleSignInButton,
-/*                  onPressed: () async {
+                  onPressed: () async {
                     SystemChannels.textInput.invokeMapMethod('TextInput.hide');
                     authController.facebookSignIn(context);
-                  },*/
-                onPressed: () => Get.offAll(() => LoginSelectorUi(plugin: plugin)),
+                  },
+                  onLongPressed: () =>
+                      Get.offAll(() => LoginSelectorUi(plugin: plugin)),
                 ),
                 FormVerticalSpace(),
                 LabelButton(

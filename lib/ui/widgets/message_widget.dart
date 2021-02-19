@@ -16,7 +16,7 @@ class MessageWidget extends StatelessWidget {
     final borderRadius = BorderRadius.all(radius);
 
     return Row(
-      mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment: !isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: <Widget>[
         if (!isMe)
           CircleAvatar(
@@ -38,14 +38,14 @@ class MessageWidget extends StatelessWidget {
   }
 
   Widget buildMessage() => Column(
-    crossAxisAlignment:
-    isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-    children: <Widget>[
-      Text(
-        message.message,
-        style: TextStyle(color: isMe ? Colors.black : Colors.white),
-        textAlign: isMe ? TextAlign.end : TextAlign.start,
-      ),
-    ],
-  );
+        crossAxisAlignment:
+            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            message.message,
+            style: TextStyle(color: isMe ? Colors.black : Colors.white),
+            textAlign: isMe ? TextAlign.end : TextAlign.start,
+          ),
+        ],
+      );
 }

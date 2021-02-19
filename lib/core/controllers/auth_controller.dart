@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fire_chat/core/models/models.dart';
@@ -17,29 +16,29 @@ import 'package:simple_gravatar/simple_gravatar.dart';
 
 class AuthController extends GetxController {
   static AuthController to = Get.find();
+  //Variables Observers
   AppLocalizations_Labels labels;
   final nameController = TextEditingController().obs;
   final emailController = TextEditingController().obs;
   final passwordController = TextEditingController().obs;
 
   final FacebookLogin plugin = FacebookLogin();
-
   final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
   final FacebookAuth _facebookAuth = FacebookAuth.instance;
 
+  //Variables stream logic for
   Rx<User> firebaseUser = Rx<User>();
   Rx<UserModel> firestoreUser = Rx<UserModel>();
-
   final RxBool admin = false.obs;
-
-  // Firebase user a realtime stream
-  Stream<User> get user => FirebaseAuth.instance.authStateChanges();
 
   String _sdkVersion;
   FacebookAccessToken _token;
   FacebookUserProfile _profile;
   String _email;
   String _imageUrl;
+
+  // Firebase user a realtime stream
+  Stream<User> get user => FirebaseAuth.instance.authStateChanges();
 
   //Streams the firestore user from the firestore collection
   Stream<UserModel> streamFirestoreUser() {
@@ -165,6 +164,7 @@ class AuthController extends GetxController {
       await _auth.signInWithCredential(credential).then((result) async {
         print('uID: ' + result.user.uid);
         print('email: ' + result.user.email);
+        print('imageUrl: ' + result.user.photoURL);
         //get photo url from gravatar if user has one
         Gravatar gravatar = Gravatar(result.user.photoURL);
         String gravatarUrl = gravatar.imageUrl(
@@ -173,6 +173,9 @@ class AuthController extends GetxController {
           rating: GravatarRating.pg,
           fileExtension: true,
         );
+        print('Gravatar URL:      $gravatarUrl');
+        print('Gravatar QR URL:   ${gravatar.qrUrl()}');
+        print('Gravatar JSON URL: ${gravatar.jsonUrl()}');
         //create the new user object
         UserModel _newUser = UserModel(
           uid: result.user.uid,
@@ -208,7 +211,6 @@ class AuthController extends GetxController {
 
     try {
       if (isExpress != false) {
-        print('bonjouww!!');
         await to.plugin.logIn(permissions: [
           FacebookPermission.publicProfile,
           FacebookPermission.email
@@ -227,7 +229,10 @@ class AuthController extends GetxController {
               rating: GravatarRating.pg,
               fileExtension: true,
             );
-            //create the new user object
+            print('Gravatar URL:      $gravatarUrl');
+            print('Gravatar QR URL:   ${gravatar.qrUrl()}');
+            print('Gravatar JSON URL: ${gravatar.jsonUrl()}');
+
             UserModel _newUser = UserModel(
               uid: result.user.uid,
               email: result.user.email,
@@ -235,7 +240,6 @@ class AuthController extends GetxController {
               lastMessageTime: DateTime.now(),
               photoUrl: gravatarUrl,
             );
-            //create the user in firestore
             _createUserFirestore(_newUser, result.user);
 
             update();
@@ -245,7 +249,6 @@ class AuthController extends GetxController {
         });
         await _updateUserFbInfo();
       } else {
-        print('hello');
         final res = await to.plugin.expressLogin();
         if (res.status == FacebookLoginStatus.success) {
           await _updateUserFbInfo();
@@ -269,18 +272,6 @@ class AuthController extends GetxController {
     }
   }
 
-  //Method to handle user info facebook
-  buildUserInfo(BuildContext context, FacebookUserProfile profile,
-      FacebookAccessToken accessToken, String email) async {
-    try {
-      final UserModel userModel = UserModel(
-          email: email,
-          name: profile.name,
-          photoUrl: null,
-          lastMessageTime: null);
-    } catch (error) {}
-  }
-
   // Get PhotoUrl for Profile avatar
   getPhotoUrl() {
     final _auth = FirebaseAuth.instance;
@@ -292,6 +283,7 @@ class AuthController extends GetxController {
     }
   }
 
+  //Method to update facebook user info
   Future<void> _updateUserFbInfo() async {
     final plugin = to.plugin;
     final token = await plugin.accessToken;
@@ -319,32 +311,13 @@ class AuthController extends GetxController {
       photoUrl: _imageUrl,
       lastMessageTime: DateTime.now(),
     );
+    print('profile userId ${_profile.userId}');
     _createUserFirestore(userModel, firebaseUser.value);
   }
 
   // Firebase user one-time fetch
   Future<User> get getUser async {
     return FirebaseAuth.instance.currentUser;
-  }
-
-  // Future data one_time fetch
-  Future getData(String collection) async {
-    QuerySnapshot snapshot =
-        await FirebaseFirestore.instance.collection(collection).get();
-    return snapshot.docs;
-  }
-
-  //get the firestore user from the firestore collection
-  Future<UserModel> getFirestoreUser() {
-    if (firebaseUser.value?.uid != null) {
-      return FirebaseFirestore.instance
-          .doc('/users/${firebaseUser.value.uid}')
-          .get()
-          .then((documentSnapshot) =>
-              UserModel.fromJson(documentSnapshot.data()));
-    }
-    update();
-    return null;
   }
 
   //handles updating the user when updating profile
@@ -419,12 +392,6 @@ class AuthController extends GetxController {
     await _googleSignIn.signOut().then((value) => Get.offAll(() => SignUpUI()));
   }
 
-  // Check SdkVersion
-  Future<void> _getSdkVersion() async {
-    final sdkVersion = await to.plugin.sdkVersion;
-    _sdkVersion = sdkVersion;
-  }
-
   // Sign out
   Future<void> signOut() {
     nameController.value.clear();
@@ -455,7 +422,6 @@ class AuthController extends GetxController {
   void onReady() async {
     //run every time auth state changes
     _updateUserFbInfo();
-    _getSdkVersion();
 
     ever(firebaseUser, handleAuthChanged);
     firebaseUser.value = await getUser;

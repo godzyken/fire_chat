@@ -2,11 +2,11 @@
 import 'package:flutter/material.dart';
 
 class FacebookSignInButton extends StatelessWidget {
-  FacebookSignInButton({this.labelText, this.onPressed, this.isExpress});
+  FacebookSignInButton({this.labelText, this.onPressed, this.onLongPressed});
 
   final String labelText;
   final void Function() onPressed;
-  final bool isExpress;
+  final void Function() onLongPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +18,7 @@ class FacebookSignInButton extends StatelessWidget {
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
         ),
         onPressed: onPressed,
+        onLongPress: onLongPressed,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
           child: Row(

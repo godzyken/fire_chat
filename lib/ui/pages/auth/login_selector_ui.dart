@@ -36,11 +36,11 @@ class _LoginSelectorUiState extends State<LoginSelectorUi> {
     final isLogin = _token != null && _profile != null;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login via Facebook example'),
+        title: const Text('Facebook Selector Mode'),
         actions: [
           IconButton(
             icon: Icon(Icons.arrow_back_outlined),
-            tooltip: 'Open shopping cart',
+            tooltip: 'back to sign in',
             onPressed: () => Get.back(closeOverlays: true, result: Get.off(() => SignInUI())),
           ),
         ],
