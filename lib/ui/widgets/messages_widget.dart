@@ -1,11 +1,11 @@
 import 'package:fire_chat/core/api/api.dart';
+import 'package:fire_chat/core/controllers/auth_controller.dart';
 import 'package:fire_chat/core/models/models.dart';
-import 'package:fire_chat/data_test.dart';
 import 'package:fire_chat/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class MessagesWidget extends StatelessWidget {
-  final UserModel idUser;
+  final String idUser;
 
   const MessagesWidget({
     @required this.idUser,
@@ -36,7 +36,7 @@ class MessagesWidget extends StatelessWidget {
 
                           return MessageWidget(
                             message: message,
-                            isMe: message.idUser == myId,
+                            isMe: message.idUser == AuthController.to?.firebaseUser?.value?.uid,
                           );
                         },
                       );

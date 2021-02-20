@@ -1,7 +1,7 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fire_chat/core/helpers/helpers.dart';
 import 'package:fire_chat/core/models/models.dart';
+import 'package:get/get.dart';
 
 class FirebaseApi {
   static Stream<List<UserModel>> getUserModels() => FirebaseFirestore.instance
@@ -10,56 +10,52 @@ class FirebaseApi {
       .snapshots()
       .transform(Utils.transformer(UserModel.fromJson));
 
-  static Future uploadMessage(UserModel idUser, String message) async {
+  static Future uploadMessage(UserModel userModel, String message) async {
     final refMessages =
-    FirebaseFirestore.instance.collection('chats/${idUser.uid}/messages');
+        FirebaseFirestore.instance.collection('chats/${userModel.uid}/messages');
+
 
     final newMessage = Message(
-      idUser: idUser.uid,
-      urlAvatar: idUser.photoUrl,
-      username: idUser.name,
+      idUser: userModel.uid,
+      urlAvatar: userModel.photoUrl,
+      username: userModel.name,
       message: message,
       createdAt: DateTime.now(),
     );
-                                                                                                                                                                                                                                                                                 await refMessages.add(newMessage.toJson());
+    await refMessages.add(newMessage.toJson());
 
-    final refUsers = FirebaseFirestore.instance.collection('users');
-    await refUsers
-        .doc(newMessage.idUser)
-        .update({UserModelField.lastMessageTime: DateTime.now()});
   }
 
-  static Stream<List<Message>> getMessages(UserModel idUser) =>
+  static Stream<List<Message>> getMessages(String idUser) =>
       FirebaseFirestore.instance
-          .collection('chats/${idUser.uid}/messages')
+          .collection('chats/$idUser/messages')
           .orderBy(MessageField.createdAt, descending: true)
           .snapshots()
           .transform(Utils.transformer(Message.fromJson));
 
-  static Future uploadChannel(UserModel idUser, Message message, String channel) async {
+  static Future uploadChannel(String idUser, String channel) async {
     final refChannels =
-    FirebaseFirestore.instance.collection('channels/${idUser.uid}/chats');
+        FirebaseFirestore.instance.collection('channels/$idUser/chats');
+
+    final UserModel userModel = Get.find();
+    final Message message = Get.find();
 
     final newChannel = ChannelModel(
-      id: idUser.uid,
-      t: channel,
-      name: idUser.name,
+      id: userModel.uid,
+      t: message.idUser,
+      name: channel,
       usernames: []..length,
-      user: idUser,
+      user: userModel,
       msgs: message,
       ts: DateTime.now(),
     );
     await refChannels.add(newChannel.toJson());
 
-    final refUsers = FirebaseFirestore.instance.collection('users');
-    await refUsers
-        .doc(newChannel.id)
-        .update({UserModelField.lastMessageTime: DateTime.now()});
   }
 
-  static Stream<List<ChannelModel>> getChannelModels(UserModel idUser) =>
+  static Stream<List<ChannelModel>> getChannelModels() =>
       FirebaseFirestore.instance
-          .collection('channels/${idUser.uid}/chats')
+          .collection('channels')
           .orderBy(ChannelModelField.ts, descending: true)
           .snapshots()
           .transform(Utils.transformer(ChannelModel.fromJson));

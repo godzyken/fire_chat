@@ -1,13 +1,17 @@
-import 'package:fire_chat/core/api/api.dart';
 import 'package:fire_chat/core/controllers/controllers.dart';
 import 'package:fire_chat/core/models/models.dart';
 import 'package:fire_chat/ui/components/components.dart';
 import 'package:fire_chat/ui/pages/chat/chat.dart';
+import 'package:fire_chat/ui/widgets/channel_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart' as cl;
 
 class CreateChannelPage extends StatefulWidget {
+  final ChannelModel channelModel;
+
+  const CreateChannelPage({Key key, @required this.channelModel}) : super(key: key);
+
   @override
   _CreateChannelPageState createState() => _CreateChannelPageState();
 }
@@ -15,7 +19,8 @@ class CreateChannelPage extends StatefulWidget {
 class _CreateChannelPageState extends State<CreateChannelPage> {
   final ScrollController _scrollController = ScrollController();
   final AuthController controller = AuthController();
-  Client client;
+  Message message;
+  cl.Client client;
   List<UserModel> users = [];
   List<UserModel> selectedUsers = [];
   int offset = 0;
@@ -82,34 +87,10 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
   }
 
   Future<String> _showEnterNameDialog(BuildContext context) {
-    final controller = TextEditingController();
     return showDialog(
       context: context,
-      builder: (context) => SimpleDialog(
-        contentPadding: const EdgeInsets.all(16),
-        title: Text('Enter a name for the channel'),
-        children: [
-          TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-            ),
-          ),
-          ButtonBar(
-            children: [
-              TextButton(
-                onPressed: () => Get.offAll(() => context),
-                child: Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () =>
-                    Get.offAll(() => context, arguments: controller.text),
-                child: Text('Ok'),
-              ),
-            ],
-          ),
-        ],
-      ),
+      builder: (context) => ChannelWidget(
+          channelModel: widget.channelModel, isMe: false,)
     );
   }
 
@@ -125,9 +106,8 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
       ],
       if (name != null) 'name': name,
     });
-    // await FirebaseApi.uploadChannel(users, message, channel)
     await channel.watch();
-    await Get.offAll(() => StreamChannel(
+    await Get.offAll(() => cl.StreamChannel(
         child: ChannelPage(),
         channel: channel)
     );
@@ -149,7 +129,7 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
   void initState() {
     super.initState();
 
-    client = StreamChat.of(context).client;
+    client = cl.StreamChat.of(context).client;
 
     _scrollController.addListener(() async {
       if (!loading &&
@@ -165,6 +145,6 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
 
   Future<void> _queryUsers() {
     loading = true;
-    // return client.queryUsers(filter, sort, options);
+    return client.queryUsers();
   }
 }

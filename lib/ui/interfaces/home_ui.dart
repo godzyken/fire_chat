@@ -1,11 +1,11 @@
-
 import 'package:fire_chat/core/controllers/controllers.dart';
 import 'package:fire_chat/localizations.dart';
 import 'package:fire_chat/ui/interfaces/interfaces.dart';
+import 'package:fire_chat/ui/pages/chat/channel_list_page.dart';
+import 'package:fire_chat/ui/pages/chat/chat.dart';
 import 'package:fire_chat/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 
 class HomeUI extends StatefulWidget {
   @override
@@ -13,7 +13,6 @@ class HomeUI extends StatefulWidget {
 }
 
 class _HomeUIState extends State<HomeUI> {
-
   @override
   void initState() {
     super.initState();
@@ -68,9 +67,7 @@ class _HomeUIState extends State<HomeUI> {
                     ListTile(
                       title: Text('Contact list'),
                       leading: Icon(Icons.people),
-                      onTap: () {
-                        print("Clicked");
-                      },
+                      onTap: () => Get.offAll(() => ChannelListPage()),
                     ),
                     ListTile(
                       title: Text('Starred'),
@@ -120,21 +117,33 @@ class _HomeUIState extends State<HomeUI> {
               body: Container(
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/img/marlonW.jpg'),
-                      fit: BoxFit.cover,
-                    )
-                ),
-                child: Center(
-                  child: Column(
-                    verticalDirection: VerticalDirection.up,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 8,
-                      ),
-
-                    ],
+                  image: AssetImage('assets/img/marlonW.jpg'),
+                  fit: BoxFit.cover,
+                )),
+              ),
+              bottomNavigationBar: BottomNavigationBar(
+                selectedItemColor: Colors.red,
+                unselectedItemColor: Colors.grey.shade600,
+                selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
+                unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w600),
+                type: BottomNavigationBarType.fixed,
+                items: [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.message),
+                    label: "Chats",
+                    // activeIcon: ChatPage(),
                   ),
-                ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.group_work),
+                    label: "Channels",
+                    // activeIcon: ChannelListPage(),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.account_box),
+                    label: "Profile",
+                    // activeIcon: UpdateProfileUI(),
+                  ),
+                ],
               ),
             ),
     );

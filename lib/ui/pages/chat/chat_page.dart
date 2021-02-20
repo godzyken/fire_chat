@@ -17,12 +17,12 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
-    extendBodyBehindAppBar: true,
+
     backgroundColor: Colors.blue,
     body: SafeArea(
       child: Column(
         children: [
-          ProfileHeaderWidget(name: widget.user.name),
+          ProfileHeaderWidget(name: widget?.user?.name),
           Expanded(
             child: Container(
               padding: EdgeInsets.all(10),
@@ -33,12 +33,13 @@ class _ChatPageState extends State<ChatPage> {
                   topRight: Radius.circular(25),
                 ),
               ),
-              child: MessagesWidget(idUser: widget.user),
+              child: MessagesWidget(idUser: widget?.user?.uid),
             ),
           ),
           NewMessageWidget(idUser: widget.user)
         ],
       ),
     ),
+
   );
 }

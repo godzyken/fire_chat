@@ -17,7 +17,7 @@ class LogoGraphicHeader extends StatelessWidget {
       child: CircleAvatar(
           foregroundColor: Colors.blue,
           backgroundColor: Colors.transparent,
-          radius: 60.0,
+          radius: 70.0,
           child: ClipOval(
             child: Image.asset(
               _imageLogo,

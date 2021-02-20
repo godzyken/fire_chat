@@ -9,13 +9,15 @@ class AppRoutes {
     GetPage(name: '/', page: () => SplashUI()),
     GetPage(name: '/sign-in', page: () => SignInUI()),
     GetPage(name: '/sign-up', page: () => SignUpUI()),
-    GetPage(name: '/login-selector', page: () => LoginSelectorUi()),
+    GetPage(name: '/login-selector', page: () => LoginSelectorUi(plugin: null,)),
     GetPage(name: '/home', page: () => HomeUI()),
     GetPage(name: '/settings', page: () => SettingsUI()),
     GetPage(name: '/reset-password', page: () => ResetPasswordUI()),
     GetPage(name: '/update-profile', page: () => UpdateProfileUI()),
 
-    GetPage(name: '/chat-page', page: () => ChatPage()),
+    GetPage(name: '/room-page', page: () => ChannelPage()),
+    GetPage(name: '/channel-list', page: () => ChannelListPage()),
+    GetPage(name: '/chat-page', page: () => ChatPage(user: null,)),
 
   ];
 }

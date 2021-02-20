@@ -49,7 +49,7 @@ class ChatHeaderWidget extends StatelessWidget {
                 return Container(
                   margin: const EdgeInsets.only(right: 12),
                   child: GestureDetector(
-                    onTap: () => Get.offAll(ChatPage(user: users[index])),
+                    onTap: () => Get.offAll(ChatPage()),
                     child: CircleAvatar(
                       radius: 24,
                       backgroundImage: NetworkImage(user.photoUrl),
