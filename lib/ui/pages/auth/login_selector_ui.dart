@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:fire_chat/ui/interfaces/interfaces.dart';
 import 'package:fire_chat/ui/pages/auth/auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';

@@ -60,19 +60,9 @@ class _HomeUIState extends State<HomeUI> {
                       ),
                     ),
                     ListTile(
-                      title: Text('Channel list'),
+                      title: Text('Contact list'),
                       leading: Icon(Icons.people),
-                      onTap: () => Get.offAll(() => ChannelListPage()),
-                    ),
-                    ListTile(
-                      title: Text('chats-page'),
-                      leading: Icon(Icons.chat_bubble_outlined),
-                      onTap: () => Get.to(() => ChatsPage()),
-                    ),
-                    ListTile(
-                      title: Text('dashboard'),
-                      leading: Icon(Icons.dashboard),
-                      onTap: () => Get.to(() => DashboardPage()),
+                      onTap: () {},
                     ),
                     ListTile(
                       title: Text('Video Call'),
@@ -112,6 +102,12 @@ class _HomeUIState extends State<HomeUI> {
                     image: AssetImage('assets/img/marlonW.jpg'),
                     fit: BoxFit.cover,
                   )),
+                  child: GestureDetector(
+                    onDoubleTap: () {
+                      print("DOUBLE TAB");
+                      Get.off(() => DashboardWidget());
+                    },
+                  ),
                 ),
               ),
             ),

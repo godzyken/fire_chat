@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fire_chat/core/helpers/helpers.dart';
 import 'package:fire_chat/core/models/models.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class FirebaseApi {
@@ -33,7 +37,7 @@ class FirebaseApi {
           .snapshots()
           .transform(Utils.transformer(Message.fromJson));
 
-  static Future uploadChannel(String idUser, String channel) async {
+  static Future uploadChannels(String idUser, String channel) async {
     final refChannels =
         FirebaseFirestore.instance.collection('channels/$idUser/chats');
 
@@ -41,9 +45,29 @@ class FirebaseApi {
     final Message message = Get.find();
 
     final newChannel = ChannelModel(
-      id: userModel.uid,
+      id: idUser,
       t: message.idUser,
       name: channel,
+      usernames: []..length,
+      user: userModel,
+      msgs: message,
+      ts: DateTime.now(),
+    );
+    await refChannels.add(newChannel.toJson());
+
+  }
+
+  static Future uploadChannel(String idUser) async {
+    final refChannels =
+        FirebaseFirestore.instance.collection('channels/$idUser/chats');
+
+    final UserModel userModel = Get.find();
+    final Message message = Get.find();
+
+    final newChannel = ChannelModel(
+      id: idUser,
+      t: message.idUser,
+      name: refChannels.path,
       usernames: []..length,
       user: userModel,
       msgs: message,

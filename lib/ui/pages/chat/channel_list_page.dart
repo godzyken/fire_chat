@@ -53,8 +53,6 @@ class ChannelListPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
                                 GestureDetector(
-                                  onTap: () =>
-                                      Get.offAll(() => CreateChannelPage()),
                                   child: Center(
                                     child: FutureBuilder<ChannelModel>(
                                         builder: (context, snapshot) {
@@ -66,6 +64,8 @@ class ChannelListPage extends StatelessWidget {
                                       );
                                     }),
                                   ),
+                                  onTap: () =>
+                                      Get.offAll(() => CreateChannelPage(members: [],)),
                                 )
                               ],
                             ),
@@ -162,8 +162,7 @@ class ChannelListPage extends StatelessWidget {
               ],
             ),
           ),
-          Text(
-            channel.msgs.createdAt.toString(),
+          Text(channel.msgs.createdAt.toString(),
             style: TextStyle(
                 fontSize: 12,
                 fontWeight: channel.user.uid.isEmpty

@@ -11,9 +11,11 @@ class UserModel {
   final String name;
   final String photoUrl;
   final DateTime lastMessageTime;
+  final String interest;
 
   UserModel({
     this.uid,
+    this.interest,
     @required this.email,
     @required this.name,
     @required this.photoUrl,
@@ -32,6 +34,7 @@ class UserModel {
       name: name ?? this.name,
       photoUrl: photoUrl ?? this.photoUrl,
       lastMessageTime: lastMessageTime ?? this.lastMessageTime,
+      interest: interest ?? this.interest,
     );
 
   static UserModel fromJson(Map<String, dynamic> json) => UserModel(
@@ -39,9 +42,10 @@ class UserModel {
     name: json['name'],
     email: json['email'],
     photoUrl: json['photoUrl'],
+    interest: json['interest'],
     lastMessageTime: Utils.toDateTime(json['lastMessageTime']),
   );
 
   Map<String, dynamic> toJson() =>
-      {'uid': uid, 'email': email, 'name': name, 'photoUrl': photoUrl, 'lastMessageTime': Utils.fromDateTimeToJson(lastMessageTime)};
+      {'uid': uid, 'email': email, 'name': name, 'photoUrl': photoUrl, 'interest': interest, 'lastMessageTime': Utils.fromDateTimeToJson(lastMessageTime)};
 }

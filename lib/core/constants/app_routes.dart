@@ -10,7 +10,7 @@ class AppRoutes {
     GetPage(name: '/sign-in', page: () => SignInUI()),
     GetPage(name: '/sign-up', page: () => SignUpUI()),
     GetPage(name: '/login-selector', page: () => LoginSelectorUi(plugin: null,)),
-    GetPage(name: '/dashboard', page: () => DashboardPage()),
+    GetPage(name: '/dashboard', page: () => DashboardWidget()),
     GetPage(name: '/home', page: () => HomeUI()),
     GetPage(name: '/settings', page: () => SettingsUI()),
     GetPage(name: '/reset-password', page: () => ResetPasswordUI()),
@@ -20,7 +20,7 @@ class AppRoutes {
     GetPage(name: '/channel-list', page: () => ChannelListPage()),
     GetPage(name: '/chat-page', page: () => ChatPage(user: null,)),
     GetPage(name: '/chats-page', page: () => ChatsPage()),
-    GetPage(name: '/create-channel', page: () => CreateChannelPage(channelModel: null,)),
+    GetPage(name: '/create-channel', page: () => CreateChannelPage(members: [],)),
 
   ];
 }

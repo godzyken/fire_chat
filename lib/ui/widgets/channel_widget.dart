@@ -19,7 +19,7 @@ class ChannelWidget extends StatelessWidget {
       children: <Widget>[
         if (!isMe) Avatar(channelModel?.user),
         Container(
-          width: 200.0,
+          width: 250.0,
           height: 100.0,
           padding: EdgeInsets.all(16),
           margin: EdgeInsets.all(16),
