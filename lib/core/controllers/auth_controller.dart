@@ -16,6 +16,7 @@ import 'package:simple_gravatar/simple_gravatar.dart';
 
 class AuthController extends GetxController {
   static AuthController to = Get.find();
+
   //Variables Observers
   AppLocalizations_Labels labels;
   final nameController = TextEditingController().obs;

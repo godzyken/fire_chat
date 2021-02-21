@@ -30,18 +30,13 @@ class MyApp extends StatelessWidget {
     return GetBuilder<LanguageController>(
       builder: (languageController) => Loading(
         child: GetMaterialApp(
-          //begin language translation stuff
-          // https://github.com/aloisdeniel/flutter_sheet_localization
           locale: languageController.getLocale,
-          // <- Current locale
           localizationsDelegates: [
-            const AppLocalizationsDelegate(), // <- Your custom delegate
+            const AppLocalizationsDelegate(),
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
           ],
           supportedLocales: AppLocalizations.languages.keys.toList(),
-          // <- Supported locales
-          //end language translation stuff
           navigatorObservers: [
             // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
           ],

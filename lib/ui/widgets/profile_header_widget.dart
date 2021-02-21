@@ -1,3 +1,4 @@
+import 'package:fire_chat/ui/pages/chat/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,7 +21,7 @@ class ProfileHeaderWidget extends StatelessWidget {
               children: [
                 BackButton(
                   color: Colors.white,
-                  onPressed: () => Get.back(closeOverlays: true),
+                  onPressed: () => Get.off(() => ChatsPage()),
                 ),
                 Expanded(
                   child: Text(

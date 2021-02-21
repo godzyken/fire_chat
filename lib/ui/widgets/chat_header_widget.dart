@@ -20,12 +20,14 @@ class ChatHeaderWidget extends StatelessWidget {
       children: [
         Container(
           width: MediaQuery.of(context).size.width * 0.75,
-          child: Text(
-            'ChatsApp',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
+          child: Center(
+            child: Text(
+              'ChatsApp',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
@@ -49,7 +51,7 @@ class ChatHeaderWidget extends StatelessWidget {
                 return Container(
                   margin: const EdgeInsets.only(right: 12),
                   child: GestureDetector(
-                    onTap: () => Get.offAll(ChatPage()),
+                    onTap: () => Get.offAll(ChatPage(user: user)),
                     child: CircleAvatar(
                       radius: 24,
                       backgroundImage: NetworkImage(user.photoUrl),

@@ -2,7 +2,6 @@ import 'package:fire_chat/core/api/api.dart';
 import 'package:fire_chat/core/controllers/auth_controller.dart';
 import 'package:fire_chat/core/models/models.dart';
 import 'package:fire_chat/ui/ui.dart';
-import 'package:fire_chat/users.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -43,28 +42,78 @@ class ChannelListPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      body: Container(child: buildText('Create a Channel')),
-                      bottomSheet: FutureBuilder<ChannelModel>(
-                          builder: (context, snapshot) {
-                        return ChannelWidget(
-                          channelModel: snapshot.data,
-                          isMe: snapshot.data?.user?.uid ==
-                              AuthController.to?.firestoreUser?.value?.uid,
-                        );
-                      }),
+                      body: Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                GestureDetector(
+                                  onTap: () =>
+                                      Get.offAll(() => CreateChannelPage()),
+                                  child: Center(
+                                    child: FutureBuilder<ChannelModel>(
+                                        builder: (context, snapshot) {
+                                      return ChannelWidget(
+                                        channelModel: snapshot.data,
+                                        isMe: snapshot.data?.user?.uid ==
+                                            AuthController
+                                                .to?.firestoreUser?.value?.uid,
+                                      );
+                                    }),
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(height: 200),
+                            Center(
+                              child: Container(
+                                  child: buildText('Create a Channel')),
+                            ),
+                          ],
+                        ),
+                      ),
                     )
-                  : ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      reverse: false,
-                      itemCount: channels.length,
-                      itemBuilder: (context, index) {
-                        final channel = channels[index];
+                  : Scaffold(
+                      appBar: AppBar(
+                        centerTitle: true,
+                        title: Text('Channel Lists'),
+                        backwardsCompatibility: true,
+                        actions: [
+                          IconButton(
+                            icon: Icon(Icons.home_sharp),
+                            tooltip: 'Back to home',
+                            onPressed: () => Get.off(() => HomeUI()),
+                          ),
+                        ],
+                      ),
+                      body: Container(
+                        child: ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            reverse: false,
+                            itemCount: channels.length,
+                            itemBuilder: (context, index) {
+                              final channel = channels[index];
 
-                        return GestureDetector(
-                          onTap: () {},
-                          child: buildContainer(channel),
-                        );
-                      });
+                              return GestureDetector(
+                                onTap: () {},
+                                child: FutureBuilder<ChannelModel>(
+                                    builder: (context, snapshot) {
+                                  return ChannelWidget(
+                                    channelModel: snapshot.data,
+                                    isMe: snapshot.data?.user?.uid ==
+                                        AuthController
+                                            .to?.firestoreUser?.value?.uid,
+                                  );
+                                }),
+                              );
+                            }),
+                      ),
+                    );
             }
         }
       });

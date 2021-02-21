@@ -34,7 +34,7 @@ class ChatBodyWidget extends StatelessWidget {
       return Container(
         height: 75,
         child: ListTile(
-          onTap: () => Get.offAll(() => ChatPage()),
+          onTap: () => Get.offAll(() => ChatPage(user: user,)),
           leading: CircleAvatar(
             radius: 25,
             backgroundImage: NetworkImage(user.photoUrl),
