@@ -13,6 +13,7 @@ import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simple_gravatar/simple_gravatar.dart';
+import 'package:twitter_login/entity/auth_result.dart';
 import 'package:twitter_login/twitter_login.dart';
 
 class AuthController extends GetxController {
@@ -286,11 +287,42 @@ class AuthController extends GetxController {
     showLoadingIndicator();
 
     try {
-      final authResult = await _twitterLogin.login();
+      final AuthResult authResult = await _twitterLogin.login();
       switch (authResult.status) {
         case TwitterLoginStatus.loggedIn:
-        // success
-        print(authResult.status);
+          final AuthCredential credential = TwitterAuthProvider.credential(
+              accessToken: authResult.authToken, secret: authResult.authTokenSecret);
+
+          await _auth.signInWithCredential(credential).then((result) async {
+            print('uID: ' + result.user.uid);
+            print('email: ' + result.user.email);
+            print('imageUrl: ' + result.user.photoURL);
+            //get photo url from gravatar if user has one
+            Gravatar gravatar = Gravatar(result.user.photoURL);
+            String gravatarUrl = gravatar.imageUrl(
+              size: 200,
+              defaultImage: GravatarImage.retro,
+              rating: GravatarRating.pg,
+              fileExtension: true,
+            );
+            print('Gravatar URL:      $gravatarUrl');
+            print('Gravatar QR URL:   ${gravatar.qrUrl()}');
+            print('Gravatar JSON URL: ${gravatar.jsonUrl()}');
+            //create the new user object
+            UserModel _newUser = UserModel(
+              uid: result.user.uid,
+              email: result.user.email,
+              name: result.user.displayName,
+              lastMessageTime: DateTime.now(),
+              photoUrl: gravatarUrl,
+            );
+            //create the user in firestore
+            _createUserFirestore(_newUser, result.user);
+
+            update();
+
+            hideLoadingIndicator();
+          });
           break;
         case TwitterLoginStatus.cancelledByUser:
         // cancel

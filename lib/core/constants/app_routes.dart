@@ -18,6 +18,7 @@ class AppRoutes {
     GetPage(name: '/interest-profile', page: () => InterestFormUi()),
 
     GetPage(name: '/channel-page', page: () => ChannelPage()),
+    GetPage(name: '/hextris-page', page: () => Hextris()),
     GetPage(name: '/channel-list', page: () => ChannelListPage()),
     GetPage(name: '/chat-page', page: () => ChatPage(user: null,)),
     GetPage(name: '/chats-page', page: () => ChatsPage()),

@@ -65,11 +65,9 @@ class _HomeUIState extends State<HomeUI> {
                       onTap: () {},
                     ),
                     ListTile(
-                      title: Text('Video Call'),
-                      leading: Icon(Icons.video_call),
-                      onTap: () {
-                        print("Clicked");
-                      },
+                      title: Text('Hextris Game'),
+                      leading: Icon(Icons.gamepad_outlined),
+                      onTap: () => Get.offAll(() => Hextris()),
                     ),
                     ListTile(
                       title: Text('Uploads'),
