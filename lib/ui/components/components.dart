@@ -7,6 +7,7 @@ export 'form_input_field_with_icon.dart';
 export 'form_vertical_spacing.dart';
 export 'google_sign_in_button.dart';
 export 'facebook_sign_in_button.dart';
+export 'twitter_sign_in_button.dart';
 export 'icon_clear_temp_files.dart';
 export 'icon_open_file_picker.dart';
 export 'icon_pick_folder.dart';

@@ -14,10 +14,12 @@ class ChannelModel {
   final Message msgs;
   final UserModel user;
   final DateTime ts;
+  final HobbiesModel hobbies;
 
   ChannelModel(
       {@required this.t,
       @required this.usernames,
+      @required this.hobbies,
       @required this.msgs,
       @required this.user,
       @required this.ts,
@@ -31,6 +33,7 @@ class ChannelModel {
     final List<String> usernames,
     final Message msgs,
     final UserModel user,
+    final HobbiesModel hobbies,
     final DateTime ts,
   }) =>
       ChannelModel(
@@ -40,6 +43,7 @@ class ChannelModel {
         usernames: usernames ?? this.usernames,
         msgs: msgs ?? this.msgs,
         user: user ?? this.user,
+        hobbies: hobbies ?? this.hobbies,
         ts: ts ?? this.ts,
       );
 
@@ -49,10 +53,11 @@ class ChannelModel {
     t: json['t'],
     user: json['user'],
     usernames: json['usernames'],
+    hobbies: json['hobbies'],
     msgs: json['messages'],
     ts: Utils.toDateTime(json['lastMessageTime']),
   );
 
   Map<String, dynamic> toJson() =>
-      {'id': id, 't': t, 'name': name, 'user': user, 'usernames': usernames, 'messages': msgs, 'lastMessageTime': Utils.fromDateTimeToJson(ts)};
+      {'id': id, 't': t, 'name': name, 'user': user, 'usernames': usernames, 'messages': msgs, 'hobbies': hobbies, 'lastMessageTime': Utils.fromDateTimeToJson(ts)};
 }

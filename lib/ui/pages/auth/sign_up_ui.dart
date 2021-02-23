@@ -73,21 +73,36 @@ class SignUpUI extends StatelessWidget {
                         }
                       }),
                   FormVerticalSpace(),
-                  GoogleSignInButton(
-                    labelText: labels?.auth?.googleSignInButton,
-                    onPressed: () async {
-                      SystemChannels.textInput.invokeMethod('TextInput.hide');
-                      authController.googleSignIn(context);
-                    },
-                  ),
-                  FacebookSignInButton(
-                    labelText: labels?.auth?.googleSignInButton,
-                    onPressed: () async {
-                      SystemChannels.textInput.invokeMethod('TextInput.hide');
-                      authController.facebookSignIn(context);
-                    },
-                    onLongPressed: () =>
-                        Get.offAll(() => LoginSelectorUi(plugin: plugin)),
+                  Wrap(
+                    runAlignment: WrapAlignment.center,
+                    runSpacing: 8.0,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    alignment: WrapAlignment.center,
+                    children: [
+                      GoogleSignInButton(
+                        labelText: labels?.auth?.googleSignInButton,
+                        onPressed: () async {
+                          SystemChannels.textInput.invokeMethod('TextInput.hide');
+                          authController.googleSignIn(context);
+                        },
+                      ),
+                      FacebookSignInButton(
+                        labelText: labels?.auth?.googleSignInButton,
+                        onPressed: () async {
+                          SystemChannels.textInput.invokeMethod('TextInput.hide');
+                          authController.facebookSignIn(context);
+                        },
+                        onLongPressed: () =>
+                            Get.offAll(() => LoginSelectorUi(plugin: plugin)),
+                      ),
+                      TwitterSignInButton(
+                        labelText: labels?.auth?.googleSignInButton,
+                        onPressed: () async {
+                          SystemChannels.textInput.invokeMethod('TextInput.hide');
+                          authController.twitterSignIn(context);
+                        },
+                      ),
+                    ],
                   ),
                   FormVerticalSpace(),
                   LabelButton(

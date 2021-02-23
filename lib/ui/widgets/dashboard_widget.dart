@@ -17,7 +17,7 @@ class DashboardWidget extends StatelessWidget {
                 HomeUI(),
                 ChatsPage(),
                 ChannelListPage(),
-                UpdateProfileUI(),
+                InterestFormUi(),
               ],
             ),
           ),
@@ -49,7 +49,7 @@ class DashboardWidget extends StatelessWidget {
               ),
               _bottomNavigationBarItem(
                 icon: Icons.account_box,
-                label: "update-profile",
+                label: "interest-profile",
                 // activeIcon: UpdateProfileUI(),
               ),
             ],

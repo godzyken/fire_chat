@@ -33,7 +33,7 @@ class UpdateProfileUI extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  LogoGraphicHeader(),
+                  Avatar(authController.firestoreUser.value),
                   SizedBox(height: 48.0),
                   FormInputFieldWithIcon(
                     controller: authController.nameController.value,

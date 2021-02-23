@@ -1,5 +1,5 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fire_chat/core/api/api.dart';
 import 'package:fire_chat/core/models/models.dart';
 import 'package:fire_chat/localizations.dart';
 import 'package:fire_chat/ui/components/components.dart';
@@ -13,6 +13,7 @@ import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simple_gravatar/simple_gravatar.dart';
+import 'package:twitter_login/twitter_login.dart';
 
 class AuthController extends GetxController {
   static AuthController to = Get.find();
@@ -22,10 +23,15 @@ class AuthController extends GetxController {
   final nameController = TextEditingController().obs;
   final emailController = TextEditingController().obs;
   final passwordController = TextEditingController().obs;
+  final interestController = TextEditingController().obs;
 
   final FacebookLogin plugin = FacebookLogin();
   final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
   final FacebookAuth _facebookAuth = FacebookAuth.instance;
+  final TwitterLogin _twitterLogin = TwitterLogin(
+      apiKey: TwitterApi.apiKey,
+      apiSecretKey: TwitterApi.secret,
+      redirectURI: TwitterApi.redirecTo);
 
   //Variables stream logic for
   Rx<User> firebaseUser = Rx<User>();
@@ -273,6 +279,35 @@ class AuthController extends GetxController {
     }
   }
 
+  //Method to handle user sign in using Twitter_login
+  twitterSignIn(BuildContext context) async {
+    final _auth = FirebaseAuth.instance;
+    final labels = AppLocalizations.of(context);
+    showLoadingIndicator();
+
+    try {
+      final authResult = await _twitterLogin.login();
+      switch (authResult.status) {
+        case TwitterLoginStatus.loggedIn:
+        // success
+        print(authResult.status);
+          break;
+        case TwitterLoginStatus.cancelledByUser:
+        // cancel
+          print(authResult.status);
+          break;
+        case TwitterLoginStatus.error:
+        // error
+          print(authResult.status);
+
+          break;
+      }
+
+    } catch (e) {
+
+    }
+  }
+
   // Get PhotoUrl for Profile avatar
   getPhotoUrl() {
     final _auth = FirebaseAuth.instance;
@@ -435,6 +470,7 @@ class AuthController extends GetxController {
     nameController.value?.dispose();
     emailController.value?.dispose();
     passwordController.value?.dispose();
+    interestController.value?.dispose();
     super.onClose();
   }
 }

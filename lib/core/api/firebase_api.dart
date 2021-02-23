@@ -1,10 +1,7 @@
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fire_chat/core/helpers/helpers.dart';
 import 'package:fire_chat/core/models/models.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class FirebaseApi {
@@ -43,6 +40,7 @@ class FirebaseApi {
 
     final UserModel userModel = Get.find();
     final Message message = Get.find();
+    final HobbiesModel hobbies = Get.find();
 
     final newChannel = ChannelModel(
       id: idUser,
@@ -51,6 +49,7 @@ class FirebaseApi {
       usernames: []..length,
       user: userModel,
       msgs: message,
+      hobbies: hobbies,
       ts: DateTime.now(),
     );
     await refChannels.add(newChannel.toJson());
@@ -63,6 +62,7 @@ class FirebaseApi {
 
     final UserModel userModel = Get.find();
     final Message message = Get.find();
+    final HobbiesModel hobbies = Get.find();
 
     final newChannel = ChannelModel(
       id: idUser,
@@ -71,6 +71,7 @@ class FirebaseApi {
       usernames: []..length,
       user: userModel,
       msgs: message,
+      hobbies: hobbies,
       ts: DateTime.now(),
     );
     await refChannels.add(newChannel.toJson());

@@ -1,3 +1,4 @@
+import 'package:fire_chat/core/api/api.dart';
 import 'package:fire_chat/core/constants/constants.dart';
 import 'package:fire_chat/core/controllers/controllers.dart';
 import 'package:fire_chat/localizations.dart';
@@ -14,6 +15,7 @@ Future main() async {
   Get.put<AuthController>(AuthController());
   Get.put<ThemeController>(ThemeController());
   Get.put<LanguageController>(LanguageController());
+  // await StreamApi.client.connect();
   await GetStorage.init();
   await Firebase.initializeApp();
   // await FirebaseApi.addRandomUsers(Users.initUsers);

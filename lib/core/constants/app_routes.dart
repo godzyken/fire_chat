@@ -15,6 +15,7 @@ class AppRoutes {
     GetPage(name: '/settings', page: () => SettingsUI()),
     GetPage(name: '/reset-password', page: () => ResetPasswordUI()),
     GetPage(name: '/update-profile', page: () => UpdateProfileUI()),
+    GetPage(name: '/interest-profile', page: () => InterestFormUi()),
 
     GetPage(name: '/channel-page', page: () => ChannelPage()),
     GetPage(name: '/channel-list', page: () => ChannelListPage()),
