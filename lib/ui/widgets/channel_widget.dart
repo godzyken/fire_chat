@@ -1,6 +1,5 @@
 import 'package:fire_chat/core/models/models.dart';
 import 'package:fire_chat/ui/components/avatar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ChannelWidget extends StatelessWidget {

@@ -1,8 +1,6 @@
 import 'package:fire_chat/core/controllers/controllers.dart';
 import 'package:fire_chat/localizations.dart';
 import 'package:fire_chat/ui/interfaces/interfaces.dart';
-import 'package:fire_chat/ui/pages/chat/channel_list_page.dart';
-import 'package:fire_chat/ui/pages/chat/chat.dart';
 import 'package:fire_chat/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -70,18 +68,14 @@ class _HomeUIState extends State<HomeUI> {
                       onTap: () => Get.offAll(() => Hextris()),
                     ),
                     ListTile(
-                      title: Text('Uploads'),
+                      title: Text('Bubble Game 3'),
                       leading: Icon(Icons.file_upload),
-                      onTap: () {
-                        print("Clicked");
-                      },
+                      onTap: () => Get.offAll(() => BubbleGame3()),
                     ),
                     ListTile(
-                      title: Text('Backups'),
-                      leading: Icon(Icons.backup),
-                      onTap: () {
-                        print("Clicked");
-                      },
+                      title: Text('Game List'),
+                      leading: Icon(Icons.list_alt_outlined),
+                        onTap: () => Get.offAll(() => GameList()),
                     ),
                     ListTile(
                       title: Text('My Card'),

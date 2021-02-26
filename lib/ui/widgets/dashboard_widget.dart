@@ -15,8 +15,7 @@ class DashboardWidget extends StatelessWidget {
               index: controller?.tabIndex,
               children: [
                 HomeUI(),
-                ChatsPage(),
-                ChannelListPage(),
+                ChatHomePage(),
                 InterestFormUi(),
               ],
             ),
@@ -39,13 +38,8 @@ class DashboardWidget extends StatelessWidget {
               ),
               _bottomNavigationBarItem(
                 icon: Icons.message,
-                label: "chats-page",
+                label: "StreamChat",
                 // activeIcon: ChatsPage(),
-              ),
-              _bottomNavigationBarItem(
-                icon: Icons.group_work,
-                label: "channel-list",
-                // activeIcon: ChannelListPage(),
               ),
               _bottomNavigationBarItem(
                 icon: Icons.account_box,

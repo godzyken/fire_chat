@@ -49,12 +49,15 @@ class ProfileHeaderWidget extends StatelessWidget {
         ),
       );
 
-  Widget buildIcon(IconData icon) => Container(
-        padding: EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white54,
+  Widget buildIcon(IconData icon) => GestureDetector(
+    onTap: () => Get.offAll(() => MembersPage()),
+    child: Container(
+          padding: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white54,
+          ),
+          child: Icon(icon, size: 25, color: Colors.white),
         ),
-        child: Icon(icon, size: 25, color: Colors.white),
-      );
+  );
 }

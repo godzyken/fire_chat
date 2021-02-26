@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fire_chat/core/helpers/helpers.dart';
 import 'package:fire_chat/core/models/models.dart';
@@ -84,5 +86,31 @@ class FirebaseApi {
           .orderBy(ChannelModelField.ts, descending: true)
           .snapshots()
           .transform(Utils.transformer(ChannelModel.fromJson));
+
+  //Method to load games
+  static Future uploadGames(GameModel gameModel, String getUrl) async {
+    final refGames =
+    FirebaseFirestore.instance.collection('games/${gameModel.id}/game');
+
+    final newGames = GameModel(
+      id: gameModel.id,
+      name: gameModel.name,
+      url: getUrl,
+    );
+    await refGames.add(newGames.toJson());
+  }
+
+  static Stream<List<GameModel>> getGameModels() => FirebaseFirestore.instance
+      .collection('games')
+      .snapshots()
+      .transform(Utils.transformer(GameModel.fromJson));
+
+  static Future<String> uploadImage(String path, File file) async {
+    final ref =
+    FirebaseFirestore.instance
+        .collection('users/$file/photoUrl');
+
+    return ref.path;
+  }
 
 }

@@ -17,10 +17,11 @@ class AppRoutes {
     GetPage(name: '/update-profile', page: () => UpdateProfileUI()),
     GetPage(name: '/interest-profile', page: () => InterestFormUi()),
 
-    GetPage(name: '/channel-page', page: () => ChannelPage()),
     GetPage(name: '/hextris-page', page: () => Hextris()),
-    GetPage(name: '/channel-list', page: () => ChannelListPage()),
+    GetPage(name: '/bubble-page', page: () => BubbleGame3()),
+    GetPage(name: '/game-list', page: () => GameList()),
     GetPage(name: '/chat-page', page: () => ChatPage(user: null,)),
+    GetPage(name: '/chat-home-page', page: () => ChatHomePage()),
     GetPage(name: '/chats-page', page: () => ChatsPage()),
     GetPage(name: '/create-channel', page: () => CreateChannelPage(members: [],)),
 

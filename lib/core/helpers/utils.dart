@@ -10,8 +10,10 @@ class Utils {
         handleData: (QuerySnapshot data, EventSink<List<T>> sink) {
           final snaps = data.docs.map((doc) => doc.data()).toList();
           final users = snaps.map((json) => fromJson(json)).toList();
+          final games = snaps.map((json) => fromJson(json)).toList();
 
           sink.add(users);
+          sink.add(games);
         },
       );
 

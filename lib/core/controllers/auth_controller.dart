@@ -291,7 +291,8 @@ class AuthController extends GetxController {
       switch (authResult.status) {
         case TwitterLoginStatus.loggedIn:
           final AuthCredential credential = TwitterAuthProvider.credential(
-              accessToken: authResult.authToken, secret: authResult.authTokenSecret);
+              accessToken: authResult.authToken,
+              secret: authResult.authTokenSecret);
 
           await _auth.signInWithCredential(credential).then((result) async {
             print('uID: ' + result.user.uid);
@@ -325,19 +326,16 @@ class AuthController extends GetxController {
           });
           break;
         case TwitterLoginStatus.cancelledByUser:
-        // cancel
+          // cancel
           print(authResult.status);
           break;
         case TwitterLoginStatus.error:
-        // error
+          // error
           print(authResult.status);
 
           break;
       }
-
-    } catch (e) {
-
-    }
+    } catch (e) {}
   }
 
   // Get PhotoUrl for Profile avatar
