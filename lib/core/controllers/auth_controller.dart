@@ -8,7 +8,6 @@ import 'package:fire_chat/ui/ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -28,7 +27,6 @@ class AuthController extends GetxController {
 
   final FacebookLogin plugin = FacebookLogin();
   final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email']);
-  final FacebookAuth _facebookAuth = FacebookAuth.instance;
   final TwitterLogin _twitterLogin = TwitterLogin(
       apiKey: TwitterApi.apiKey,
       apiSecretKey: TwitterApi.secret,
@@ -121,11 +119,22 @@ class AuthController extends GetxController {
           uid: result.user.uid,
           email: result.user.email,
           name: nameController.value.text,
-          lastMessageTime: DateTime.now(),
+          createdAt: DateTime.now(),
           photoUrl: gravatarUrl,
         );
         //create the user in firestore
         _createUserFirestore(_newUser, result.user);
+
+        await StreamUserApi.createUser(
+            uid: result.user.uid,
+            username: result.user.displayName,
+            urlImage: result.user.photoURL);
+
+        final resultA = await StreamUserApi.login(uid: result.user.uid);
+
+        print('login id streamChat $resultA');
+
+
         emailController.value.clear();
         passwordController.value.clear();
         hideLoadingIndicator();
@@ -170,9 +179,7 @@ class AuthController extends GetxController {
           idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
       await _auth.signInWithCredential(credential).then((result) async {
-        print('uID: ' + result.user.uid);
-        print('email: ' + result.user.email);
-        print('imageUrl: ' + result.user.photoURL);
+
         //get photo url from gravatar if user has one
         Gravatar gravatar = Gravatar(result.user.photoURL);
         String gravatarUrl = gravatar.imageUrl(
@@ -181,19 +188,27 @@ class AuthController extends GetxController {
           rating: GravatarRating.pg,
           fileExtension: true,
         );
-        print('Gravatar URL:      $gravatarUrl');
-        print('Gravatar QR URL:   ${gravatar.qrUrl()}');
-        print('Gravatar JSON URL: ${gravatar.jsonUrl()}');
+
         //create the new user object
         UserModel _newUser = UserModel(
           uid: result.user.uid,
           email: result.user.email,
           name: result.user.displayName,
-          lastMessageTime: DateTime.now(),
+          createdAt: DateTime.now(),
           photoUrl: gravatarUrl,
         );
         //create the user in firestore
         _createUserFirestore(_newUser, result.user);
+
+        await StreamUserApi.createUser(
+            uid: result.user.uid,
+            username: result.user.displayName,
+            urlImage: result.user.photoURL);
+
+        final resultA = await StreamUserApi.login(uid: result.user.uid);
+
+        print('Google create token : $resultA');
+
 
         update();
 
@@ -227,8 +242,7 @@ class AuthController extends GetxController {
               .signInWithCredential(
                   FacebookAuthProvider.credential(result.accessToken.token))
               .then((result) async {
-            print('uID: ' + result.user.uid);
-            print('email: ' + result.user.email);
+
             //get photo url from gravatar if user has one
             Gravatar gravatar = Gravatar(result.user.photoURL);
             String gravatarUrl = gravatar.imageUrl(
@@ -237,18 +251,24 @@ class AuthController extends GetxController {
               rating: GravatarRating.pg,
               fileExtension: true,
             );
-            print('Gravatar URL:      $gravatarUrl');
-            print('Gravatar QR URL:   ${gravatar.qrUrl()}');
-            print('Gravatar JSON URL: ${gravatar.jsonUrl()}');
 
             UserModel _newUser = UserModel(
               uid: result.user.uid,
               email: result.user.email,
               name: result.user.displayName,
-              lastMessageTime: DateTime.now(),
+              createdAt: DateTime.now(),
               photoUrl: gravatarUrl,
             );
             _createUserFirestore(_newUser, result.user);
+
+            await StreamUserApi.createUser(
+                uid: result.user.uid,
+                username: result.user.displayName,
+                urlImage: result.user.photoURL).then((value) => StreamUserApi.login(uid: value));
+
+            final resultA = await StreamUserApi.login(uid: result.user.uid);
+
+            print('facebook create token : $resultA');
 
             update();
 
@@ -295,9 +315,7 @@ class AuthController extends GetxController {
               secret: authResult.authTokenSecret);
 
           await _auth.signInWithCredential(credential).then((result) async {
-            print('uID: ' + result.user.uid);
-            print('email: ' + result.user.email);
-            print('imageUrl: ' + result.user.photoURL);
+
             //get photo url from gravatar if user has one
             Gravatar gravatar = Gravatar(result.user.photoURL);
             String gravatarUrl = gravatar.imageUrl(
@@ -306,19 +324,27 @@ class AuthController extends GetxController {
               rating: GravatarRating.pg,
               fileExtension: true,
             );
-            print('Gravatar URL:      $gravatarUrl');
-            print('Gravatar QR URL:   ${gravatar.qrUrl()}');
-            print('Gravatar JSON URL: ${gravatar.jsonUrl()}');
+
             //create the new user object
             UserModel _newUser = UserModel(
               uid: result.user.uid,
               email: result.user.email,
               name: result.user.displayName,
-              lastMessageTime: DateTime.now(),
+              createdAt: DateTime.now(),
               photoUrl: gravatarUrl,
             );
             //create the user in firestore
             _createUserFirestore(_newUser, result.user);
+
+            await StreamUserApi.createUser(
+                uid: result.user.uid,
+                username: result.user.displayName,
+                urlImage: result.user.photoURL).then((value) => StreamUserApi.login(uid: value));
+
+            final resultA = await StreamUserApi.login(uid: result.user.uid);
+
+            print('twitter create token : $resultA');
+
 
             update();
 
@@ -371,14 +397,19 @@ class AuthController extends GetxController {
     _imageUrl = imageUrl;
 
     final UserModel userModel = UserModel(
-      uid: _profile.userId,
+      uid: _profile?.userId,
       email: _email,
-      name: _profile.name,
+      name: _profile?.name,
       photoUrl: _imageUrl,
-      lastMessageTime: DateTime.now(),
+      createdAt: DateTime.now(),
     );
-    print('profile userId ${_profile.userId}');
     _createUserFirestore(userModel, firebaseUser.value);
+
+    await StreamUserApi.createUser(
+        uid: firebaseUser?.value?.uid,
+        username: firebaseUser?.value?.displayName,
+        urlImage: firebaseUser?.value?.photoURL);
+
   }
 
   // Firebase user one-time fetch
@@ -407,8 +438,7 @@ class AuthController extends GetxController {
           backgroundColor: Get.theme.snackBarTheme.backgroundColor,
           colorText: Get.theme.snackBarTheme.actionTextColor);
     } on PlatformException catch (error) {
-      //List<String> errors = error.toString().split(',');
-      // print("Error: " + errors[1]);
+
       hideLoadingIndicator();
       print(error.code);
       String authError;
@@ -464,7 +494,7 @@ class AuthController extends GetxController {
     emailController.value.clear();
     passwordController.value.clear();
     _googleSignOut();
-    _facebookAuth.logOut();
+    plugin.logOut();
     return FirebaseAuth.instance.signOut();
   }
 
@@ -479,7 +509,7 @@ class AuthController extends GetxController {
   //create the firestore user in users collection
   void _createUserFirestore(UserModel user, User _firebaseUser) {
     FirebaseFirestore.instance
-        .doc('/users/${_firebaseUser.uid}')
+        .doc('/users/${_firebaseUser?.uid}')
         .set(user.toJson());
     update();
   }

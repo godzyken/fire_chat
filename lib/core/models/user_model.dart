@@ -2,28 +2,40 @@ import 'package:fire_chat/core/helpers/helpers.dart';
 import 'package:flutter/cupertino.dart';
 
 class UserModelField {
-  static final String lastMessageTime = 'lastMessageTime';
+  static final String updatedAt = 'updatedAt';
+  static final String createdAt = 'createAt';
+  static final String lastActive = 'lastActive';
 }
 
 class UserModel {
   final String uid;
   final String email;
   final String name;
+  final String lastName;
   final String photoUrl;
-  final DateTime lastMessageTime;
-  final String interest;
+  final String role;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime lastActive;
   final bool isOnline;
-  final bool isAdmin;
+  final bool isBanned;
+  final bool isShadowBanned;
+  final bool isStaffUser;
 
   UserModel({
     @required this.uid,
-    this.interest,
-    @required this.email,
     @required this.name,
     @required this.photoUrl,
-    this.lastMessageTime,
+    this.email,
+    this.lastName,
+    this.role,
+    this.createdAt,
+    this.updatedAt,
+    this.lastActive,
     this.isOnline,
-    this.isAdmin,
+    this.isBanned,
+    this.isShadowBanned,
+    this.isStaffUser
   });
 
   UserModel copyWith({
@@ -31,19 +43,30 @@ class UserModel {
     String email,
     String name,
     String photoUrl,
-    String lastMessageTime,
+    String createdAt,
+    String updatedAt,
+    String lastActive,
+    String lastName,
     String isOnline,
-    String inAdmin,
+    String isBanned,
+    String isShadowBanned,
+    String isStaffUser,
+    String role,
   }) =>
       UserModel(
         uid: uid ?? this.uid,
         email: email ?? this.email,
         name: name ?? this.name,
+        lastName: lastName ?? this.lastName,
         photoUrl: photoUrl ?? this.photoUrl,
-        lastMessageTime: lastMessageTime ?? this.lastMessageTime,
-        interest: interest ?? this.interest,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdAt: createdAt ?? this.createdAt,
+        lastActive: lastActive ?? this.lastActive,
         isOnline: isOnline ?? this.isOnline,
-        isAdmin: isAdmin ?? this.isAdmin,
+        isBanned: isBanned ?? this.isBanned,
+        isShadowBanned: isShadowBanned ?? this.isShadowBanned,
+        role: role ?? this.role,
+        isStaffUser: isStaffUser ?? this.isStaffUser,
       );
 
   static UserModel fromJson(Map<String, dynamic> json) => UserModel(
@@ -51,10 +74,15 @@ class UserModel {
         name: json['name'],
         email: json['email'],
         photoUrl: json['photoUrl'],
-        interest: json['interest'],
+        lastName: json['lastName'],
         isOnline: json['isOnline'],
-        isAdmin: json['isAdmin'],
-        lastMessageTime: Utils.toDateTime(json['lastMessageTime']),
+        isBanned: json['isBanned'],
+        isShadowBanned: json['isShadowBanned'],
+        isStaffUser: json['isStaffUser'],
+        role: json['role'],
+        createdAt: Utils.toDateTime(json['createdAt']),
+        updatedAt: Utils.toDateTime(json['updatedAt']),
+        lastActive: Utils.toDateTime(json['lastActive']),
       );
 
   Map<String, dynamic> toJson() => {
@@ -62,10 +90,15 @@ class UserModel {
         'email': email,
         'name': name,
         'photoUrl': photoUrl,
-        'interest': interest,
+        'lastName': lastName,
         'isOnline': isOnline,
-        'isAdmin': isAdmin,
-        'lastMessageTime': Utils.fromDateTimeToJson(lastMessageTime)
+        'isBanned': isBanned,
+        'isShadowBanned': isShadowBanned,
+        'isStaffUser': isStaffUser,
+        'role': role,
+        'lastActive': Utils.fromDateTimeToJson(lastActive),
+        'createdAt': Utils.fromDateTimeToJson(createdAt),
+        'updatedAt': Utils.fromDateTimeToJson(updatedAt),
       };
 
   int get hashCode => uid.hashCode ^ name.hashCode ^ photoUrl.hashCode;

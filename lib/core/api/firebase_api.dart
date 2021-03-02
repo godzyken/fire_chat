@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 class FirebaseApi {
   static Stream<List<UserModel>> getUserModels() => FirebaseFirestore.instance
       .collection('users')
-      .orderBy(UserModelField.lastMessageTime, descending: true)
+      .orderBy(UserModelField.lastActive, descending: true)
       .snapshots()
       .transform(Utils.transformer(UserModel.fromJson));
 

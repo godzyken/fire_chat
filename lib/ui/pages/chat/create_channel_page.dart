@@ -42,7 +42,7 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
                   idMembers: idParticipants,
                 );
 
-                Get.offAll(() => HomeUI());
+                GetBuilder(builder: (context) => ChatHomePage());
               },
             ),
             const SizedBox(width: 8),
@@ -101,15 +101,17 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
   }
 
   Widget buildTextField() => TextFormField(
-        decoration: InputDecoration(
-          labelText: 'Channel Name',
-          labelStyle: TextStyle(color: Colors.black),
-          border: OutlineInputBorder(),
-          focusedBorder: OutlineInputBorder(),
-        ),
-        maxLength: 30,
-        onChanged: (value) => setState(() => name = value),
-      );
+      decoration: InputDecoration(
+        labelText: 'Channel Name',
+        labelStyle: TextStyle(color: Colors.black),
+        border: OutlineInputBorder(),
+        focusedBorder: OutlineInputBorder(),
+      ),
+      maxLength: 30,
+      onChanged: (value) => setState(() => name = value),
+      onFieldSubmitted: (value) => setState(() =>
+          StreamChannelApi.createChannel(context,
+              name: value, imageFile: imageFile)));
 
   Widget buildMembers() => Column(
         children: widget.members

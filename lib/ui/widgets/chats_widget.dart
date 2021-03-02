@@ -7,7 +7,7 @@ class ChatsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final idUser = StreamChat.of(context)?.user?.id;
 
-    return ChannelListView(
+    return  ChannelListView(
       filter: {
         'members': {
           '\$in': [idUser],

@@ -20,7 +20,7 @@ class _ChatPageMobileState extends State<ChatPageMobile> {
     child: Scaffold(
       appBar: buildAppBar(),
       body: Column(
-        children: [
+        children: <Widget>[
           Expanded(child: MessageListView()),
           MessageInput(),
         ],

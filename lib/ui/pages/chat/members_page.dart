@@ -4,7 +4,7 @@ import 'package:fire_chat/ui/pages/chat/chat.dart';
 import 'package:fire_chat/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart' hide User;
 
 class MembersPage extends StatefulWidget {
   @override
@@ -19,7 +19,7 @@ class _MembersPageState extends State<MembersPage> {
   void initState() {
     super.initState();
 
-    allUsers = StreamUserApi.getAllUser();
+    allUsers = StreamUserApi.getAllUsers();
   }
 
   @override
@@ -35,11 +35,14 @@ class _MembersPageState extends State<MembersPage> {
               onPressed: () => Get.off(() => ChatsPage()),
             ),
             TextButton(
-              child: Text('CREATE'),
-              onPressed: selectUsers.isEmpty
-                  ? null
-                  : () =>
-                      Get.offAll(() => CreateChannelPage(members: selectUsers)),
+                child: Text('CREATE'),
+                onPressed: selectUsers.isEmpty
+                    ? null
+                    : () => GetBuilder(
+                        builder: (context) =>
+                            CreateChannelPage(members: selectUsers),
+
+                )
             ),
             const SizedBox(width: 8),
           ],
@@ -56,7 +59,7 @@ class _MembersPageState extends State<MembersPage> {
                 } else {
                   final users = snapshot.data
                       .where((UserModel user) =>
-                          user.uid != StreamChat.of(context).user.id)
+                          user.uid != StreamChat.of(context)?.user?.id)
                       .toList();
 
                   return buildUsers(users);

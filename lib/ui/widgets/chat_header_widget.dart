@@ -36,7 +36,7 @@ class ChatHeaderWidget extends StatelessWidget {
           height: 60,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: users.length,
+            itemCount: users?.length,
             itemBuilder: (context, index) {
               final user = users[index];
               if (index == 0) {
@@ -51,10 +51,10 @@ class ChatHeaderWidget extends StatelessWidget {
                 return Container(
                   margin: const EdgeInsets.only(right: 12),
                   child: GestureDetector(
-                    onTap: () => Get.offAll(ChatPage(user: user)),
+                    onTap: () => Get.offAll(() => ChatPage(user: user)),
                     child: CircleAvatar(
                       radius: 24,
-                      backgroundImage: NetworkImage(user.photoUrl),
+                      backgroundImage: (user.photoUrl == null) ? AssetImage('assets/avatar/gaïmaito.jpg') : NetworkImage(user.photoUrl),
                     ),
                   ),
                 );

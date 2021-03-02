@@ -1,14 +1,28 @@
-
-
 import 'dart:io';
 
 import 'package:fire_chat/core/api/api.dart';
+import 'package:fire_chat/core/controllers/controllers.dart';
 import 'package:flutter/material.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart' as sc;
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 class StreamChannelApi {
+  static Future<List<Channel>> searchChannel({
+    @required String idUser,
+    @required String username,
+  }) async {
+    final idSelfUser = AuthController.to.getUser;
+    final filter = {
+      'name': '$username',
+      "members": {
+        "\$in": [idUser, idSelfUser],
+      }
+    };
+    final channels = await StreamApi.client.queryChannels(filter: filter);
+
+    return channels.isEmpty != null ? null : channels.first;
+  }
+
   static Future<Channel> createChannel(
       BuildContext context, {
         @required String name,
@@ -37,7 +51,7 @@ class StreamChannelApi {
       }) async {
     final id = idChannel ?? Uuid().v4();
 
-    final idSelfUser = sc.StreamChat.of(context).user.id;
+    final idSelfUser = StreamChat.of(context).user.id;
     final channel = StreamApi.client.channel(
       'messaging',
       id: id,

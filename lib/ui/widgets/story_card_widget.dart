@@ -1,5 +1,8 @@
 
+import 'package:fire_chat/core/models/models.dart';
+import 'package:fire_chat/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AddStoryCardWidget extends StatelessWidget {
   @override
@@ -7,6 +10,32 @@ class AddStoryCardWidget extends StatelessWidget {
     title: '',
     urlImage: '',
     onClicked: () {},
+  );
+}
+
+class UserStoryCardWidget extends StatelessWidget {
+  final UserStoryModel story;
+
+  const UserStoryCardWidget({
+    Key key,
+    @required this.story,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => StoryCardWidget(
+    title: story.userName,
+    urlImage: story.stories.first.imageUrl,
+    urlAvatar: story.userImageUrl,
+    onClicked: () {
+      if (story.stories.isEmpty) return;
+
+      GetBuilder(
+        builder: (context) => StoryViewPage(
+          stories: [story],
+          userStory: story,
+        ),
+      );
+    },
   );
 }
 

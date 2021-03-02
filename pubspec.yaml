@@ -40,12 +40,18 @@ dependencies:
   splashscreen:
   stream_chat_flutter:
   stream_chat_flutter_core:
+  stream_chat_persistence:
   stream_chat:
   uuid:
   image_picker:
   twitter_login:
   flutter_webview_plugin:
+  story_view:
+  timeago:
+  foundation:
+    path: foundation/
 
+  http:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
