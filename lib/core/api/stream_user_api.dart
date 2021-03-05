@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:fire_chat/core/api/api.dart';
 import 'package:fire_chat/core/models/models.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:foundation/model/user_token.dart';
@@ -13,11 +12,7 @@ import 'package:http/http.dart' as http;
 class StreamUserApi {
   static Future<List<UserModel>> getAllUsers({bool includeMe = false}) async {
     final sort = SortOption('last_message_at');
-    final filter = {
-      "id": {"\$autocomplete": "USER_ID"},
-    };
     final response = await StreamApi.client.queryUsers(
-      filter: filter,
       sort: [sort],
       pagination: PaginationParams(
         offset: 0,
@@ -88,7 +83,7 @@ class StreamUserApi {
   static Future<UserToken> _generateUserToken({
     @required String idUser,
   }) async {
-    const urlAuthentication = 'http://localhost:5000/stream-chat-d5827-306316/us-central1/createToken';
+    const urlAuthentication = 'http://localhost:5001/stream-chat-d5827-306316/us-central1/createToken';
     final headers = <String, String>{
       'Content-Type': 'application/json',
     };

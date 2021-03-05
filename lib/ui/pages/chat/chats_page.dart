@@ -1,5 +1,5 @@
 import 'package:fire_chat/core/api/api.dart';
-import 'package:fire_chat/core/constants/app_themes.dart';
+import 'package:fire_chat/core/constants/constants.dart';
 import 'package:fire_chat/core/models/models.dart';
 import 'package:fire_chat/ui/ui.dart';
 import 'package:fire_chat/ui/widgets/widgets.dart';
@@ -20,11 +20,9 @@ class _ChatsPageState extends State<ChatsPage> {
           child: GestureDetector(
             onDoubleTap: () {
               print("DOUBLE TAB");
-              Get.off(() => HomeUI());
+              Get.off(() => DashboardWidget());
             },
-            onTap: () {
-              print('connection watch channel ${StreamApi.client}');
-            },
+            onTap: () {},
             behavior: HitTestBehavior.translucent,
             child: StreamBuilder<List<UserModel>>(
               stream: FirebaseApi.getUserModels(),
@@ -38,7 +36,6 @@ class _ChatsPageState extends State<ChatsPage> {
                       return buildText('Something Went Wrong Try later');
                     } else {
                       final users = snapshot.data;
-                      print('connection watch users $users}');
                       if (users.isEmpty) {
                         return buildText('No Users Found');
                       } else

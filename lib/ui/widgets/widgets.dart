@@ -15,3 +15,4 @@ export 'profile_image_widget.dart';
 export 'stories_grid_widget.dart';
 export 'story_card_widget.dart';
 export 'story_delegate_widget.dart';
+export 'user_image_widget.dart';

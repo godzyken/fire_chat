@@ -1,14 +1,15 @@
 import 'dart:io';
 
 import 'package:fire_chat/core/api/api.dart';
-import 'package:fire_chat/core/models/models.dart';
+import 'package:fire_chat/core/models/models.dart' as model;
 import 'package:fire_chat/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 class CreateChannelPage extends StatefulWidget {
-  final List<UserModel> members;
+  final List<model.UserModel> members;
 
   const CreateChannelPage({Key key, @required this.members}) : super(key: key);
 
@@ -21,13 +22,15 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
   File imageFile;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => StreamChat(
+      client: StreamApi.client,
+      child: Scaffold(
         appBar: AppBar(
           title: Text('Create Room'),
           actions: [
             IconButton(
                 icon: Icon(Icons.arrow_back_sharp),
-                onPressed: () => Get.off(() => ChannelListWidget)),
+                onPressed: () => Get.off(() => MembersPage())),
             IconButton(
               icon: Icon(Icons.done),
               onPressed: () async {
@@ -35,14 +38,16 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
                     .map((participant) => participant.uid)
                     .toList();
 
-                await StreamChannelApi.createChannel(
+                final channel = await StreamChannelApi.createChannel(
                   context,
                   name: name,
                   imageFile: imageFile,
                   idMembers: idParticipants,
                 );
 
-                GetBuilder(builder: (context) => ChatHomePage());
+                Get.offAll((context) => ChatPage(
+                      user: [], channel: channel,
+                    ));
               },
             ),
             const SizedBox(width: 8),
@@ -79,7 +84,7 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
             buildMembers(),
           ],
         ),
-      );
+      ));
 
   Widget buildImage(BuildContext context) {
     if (imageFile == null) {
@@ -109,9 +114,9 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
       ),
       maxLength: 30,
       onChanged: (value) => setState(() => name = value),
-      onFieldSubmitted: (value) => setState(() =>
+      onFieldSubmitted: (value) =>
           StreamChannelApi.createChannel(context,
-              name: value, imageFile: imageFile)));
+              name: value, imageFile: imageFile));
 
   Widget buildMembers() => Column(
         children: widget.members

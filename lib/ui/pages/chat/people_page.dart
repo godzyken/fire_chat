@@ -16,7 +16,7 @@ class PeoplePage extends StatelessWidget {
               Tab(
                 child: Text(
                   'STORIES',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(color: Colors.blueAccent, fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ],

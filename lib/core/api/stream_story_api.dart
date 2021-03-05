@@ -35,8 +35,9 @@ class StreamStoryApi {
         .map<UserStoryModel>((user) {
       final storiesJson = user.extraData['stories'];
 
-      final stories =
-      storiesJson.map<StoryModel>((json) => StoryModel.fromJson(json)).toList();
+      final stories = storiesJson
+          .map<StoryModel>((json) => StoryModel.fromJson(json))
+          .toList();
 
       return UserStoryModel(
         stories: stories,

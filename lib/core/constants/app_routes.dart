@@ -21,9 +21,14 @@ class AppRoutes {
     GetPage(name: '/bubble-page', page: () => BubbleGame3()),
     GetPage(name: '/game-list', page: () => GameList()),
     GetPage(name: '/chat-page', page: () => ChatPage(user: null,)),
+    GetPage(name: '/chat-page-mobile', page: () => ChatPageMobile(channel: null,)),
     GetPage(name: '/chat-home-page', page: () => ChatHomePage()),
     GetPage(name: '/chats-page', page: () => ChatsPage()),
-    GetPage(name: '/create-channel', page: () => CreateChannelPage(members: [],)),
+    GetPage(name: '/create-channel', page: () => CreateChannelPage(members: [])),
+    GetPage(name: '/add-members', page: () => MembersPage()),
+    GetPage(name: '/people-page', page: () => PeoplePage()),
+
+    GetPage(name: '/profile', page: () => InterestFormUi()),
 
   ];
 }

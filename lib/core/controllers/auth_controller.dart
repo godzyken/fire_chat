@@ -64,6 +64,7 @@ class AuthController extends GetxController {
     if (_firebaseUser?.uid != null) {
       firestoreUser.bindStream(streamFirestoreUser());
       await isAdmin();
+      await login();
     }
 
     if (_firebaseUser == null) {
@@ -163,6 +164,22 @@ class AuthController extends GetxController {
       }
       update();
     });
+  }
+
+  login() async {
+    final googleUser = await _googleSignIn.signIn();
+    if (googleUser == null) throw Exception('No user');
+
+    final googleAuth = await googleUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    final userCredential =
+    await FirebaseAuth.instance.signInWithCredential(credential);
+
+    return userCredential.additionalUserInfo.isNewUser;
   }
 
   //Method to handle user sign in using google_sign_in
@@ -339,11 +356,9 @@ class AuthController extends GetxController {
             await StreamUserApi.createUser(
                 uid: result.user.uid,
                 username: result.user.displayName,
-                urlImage: result.user.photoURL).then((value) => StreamUserApi.login(uid: value));
+                urlImage: result.user.photoURL);
 
-            final resultA = await StreamUserApi.login(uid: result.user.uid);
-
-            print('twitter create token : $resultA');
+            await StreamUserApi.login(uid: result.user.uid);
 
 
             update();

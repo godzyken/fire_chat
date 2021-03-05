@@ -15,12 +15,12 @@ class ChannelListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final name = channel.extraData['name'];
-    final urlImage = channel.extraData['image'];
+    final name = channel?.extraData['name'];
+    final urlImage = channel?.extraData['image'];
 
-    final hasMessage = channel.state.messages.isNotEmpty;
-    final lastMessage = hasMessage ? channel.state.messages.last.text : '';
-    final lastMessageAt = _formatDateTime(channel.lastMessageAt);
+    final hasMessage = channel?.state?.messages?.isNotEmpty;
+    final lastMessage = hasMessage ? channel?.state?.messages?.last?.text : '';
+    final lastMessageAt = _formatDateTime(channel?.lastMessageAt);
 
     return buildChannel(
       context,
@@ -41,7 +41,7 @@ class ChannelListWidget extends StatelessWidget {
         @required String lastMessageAt,
       }) =>
       ListTile(
-        onTap: () => Get.offAll(() => ChatPageMobile(channel: channel)),
+        onTap: () => Get.offAll((context) => ChatPageMobile(channel: channel)),
         leading: ProfileImageWidget(imageUrl: urlImage),
         title: Text(
           name,

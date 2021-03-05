@@ -43,7 +43,7 @@ class Authentication {
   }
 
   static Future _sendError(ExpressHttpRequest request) async {
-    final response = AuthenticationResponse(error: 'Some error occurred');
+    final response = await AuthenticationResponse(error: 'Some error occurred');
 
     await _sendResponse(request, response);
   }

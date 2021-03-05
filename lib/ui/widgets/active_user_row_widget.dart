@@ -20,7 +20,7 @@ class ActiveUsersRowWidget extends StatelessWidget {
           ),
           Text(
             'Create\nRoom',
-            style: TextStyle(fontSize: 14, color: Colors.white),
+            style: TextStyle(fontSize: 14),
           ),
         ],
       ),

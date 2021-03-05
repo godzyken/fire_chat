@@ -1,17 +1,20 @@
 import 'dart:io';
 
 import 'package:fire_chat/core/api/api.dart';
-import 'package:fire_chat/core/controllers/controllers.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:stream_chat/stream_chat.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart' hide Channel;
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:uuid/uuid.dart';
+import 'package:meta/meta.dart';
 
 class StreamChannelApi {
   static Future<List<Channel>> searchChannel({
     @required String idUser,
     @required String username,
   }) async {
-    final idSelfUser = AuthController.to.getUser;
+    final idSelfUser = FirebaseAuth.instance.currentUser.uid;
     final filter = {
       'name': '$username',
       "members": {
@@ -19,21 +22,21 @@ class StreamChannelApi {
       }
     };
     final channels = await StreamApi.client.queryChannels(filter: filter);
-
     return channels.isEmpty != null ? null : channels.first;
   }
 
   static Future<Channel> createChannel(
-      BuildContext context, {
-        @required String name,
-        @required File imageFile,
-        List<String> idMembers = const [],
-      }) async {
+    BuildContext context, {
+    @required String name,
+    @required File imageFile,
+    List<String> idMembers = const [],
+  }) async {
     final idChannel = Uuid().v4();
 
-    final urlImage = await FirebaseApi.uploadImage('images/$idChannel', imageFile);
+    final urlImage =
+        await FirebaseApi.uploadImage('images/$idChannel', imageFile);
 
-    return createChannelWithUsers(
+    return await createChannelWithUsers(
       context,
       name: name,
       urlImage: urlImage,
@@ -43,12 +46,12 @@ class StreamChannelApi {
   }
 
   static Future<Channel> createChannelWithUsers(
-      BuildContext context, {
-        @required String name,
-        @required String urlImage,
-        List<String> idMembers = const [],
-        String idChannel,
-      }) async {
+    BuildContext context, {
+    @required String name,
+    @required String urlImage,
+    List<String> idMembers = const [],
+    String idChannel,
+  }) async {
     final id = idChannel ?? Uuid().v4();
 
     final idSelfUser = StreamChat.of(context).user.id;
