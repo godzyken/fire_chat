@@ -64,7 +64,6 @@ class AuthController extends GetxController {
     if (_firebaseUser?.uid != null) {
       firestoreUser.bindStream(streamFirestoreUser());
       await isAdmin();
-      await login();
     }
 
     if (_firebaseUser == null) {
@@ -166,22 +165,6 @@ class AuthController extends GetxController {
     });
   }
 
-  login() async {
-    final googleUser = await _googleSignIn.signIn();
-    if (googleUser == null) throw Exception('No user');
-
-    final googleAuth = await googleUser.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    final userCredential =
-    await FirebaseAuth.instance.signInWithCredential(credential);
-
-    return userCredential.additionalUserInfo.isNewUser;
-  }
-
   //Method to handle user sign in using google_sign_in
   googleSignIn(BuildContext context) async {
     final _auth = FirebaseAuth.instance;
@@ -222,7 +205,7 @@ class AuthController extends GetxController {
             username: result.user.displayName,
             urlImage: result.user.photoURL);
 
-        final resultA = await StreamUserApi.login(uid: result.user.uid);
+        final resultA = await StreamUserApi.login(uid: result.user.displayName);
 
         print('Google create token : $resultA');
 

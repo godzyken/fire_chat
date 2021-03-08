@@ -21,7 +21,17 @@ class StreamChannelApi {
         "\$in": [idUser, idSelfUser],
       }
     };
-    final channels = await StreamApi.client.queryChannels(filter: filter);
+
+    final channels = await StreamApi.client.queryChannels(
+      filter: filter,
+      options: {
+        "watch": true,
+        "state": true,
+        "limit": 20,
+        "offset": 10,
+      },
+    );
+
     return channels.isEmpty != null ? null : channels.first;
   }
 
@@ -70,4 +80,22 @@ class StreamChannelApi {
     await channel.watch();
     return channel;
   }
+
+/* static Future<List<Channel>> getChannels({@required StreamChatState state}) async {
+    final filter = {
+      "type": "mobile",
+    };
+
+    final sort = [
+      SortOption(
+        "last_message_at",
+        direction: SortOption.DESC,
+      ),
+    ];
+
+    return await state.client.queryChannels(
+      filter: filter,
+      sort: sort,
+    );
+  }*/
 }

@@ -44,6 +44,28 @@ class InterestFormUi extends StatelessWidget {
                   authController.interestController.value.text = value,
                 ),
                 FormVerticalSpace(),
+                FormInputFieldWithIcon(
+                  controller: authController.interestController.value,
+                  iconPrefix: Icons.link_sharp,
+                  labelText: labels?.auth?.nameFormField,
+                  validator: Validator(labels).name,
+                  keyboardType: TextInputType.name,
+                  onChanged: (value) => null,
+                  onSaved: (value) =>
+                  authController.interestController.value.text = value,
+                ),
+                FormVerticalSpace(),
+                FormInputFieldWithIcon(
+                  controller: authController.interestController.value,
+                  iconPrefix: Icons.link_sharp,
+                  labelText: labels?.auth?.nameFormField,
+                  validator: Validator(labels).name,
+                  keyboardType: TextInputType.name,
+                  onChanged: (value) => null,
+                  onSaved: (value) =>
+                  authController.interestController.value.text = value,
+                ),
+                FormVerticalSpace(),
               ],
             ),
           ),

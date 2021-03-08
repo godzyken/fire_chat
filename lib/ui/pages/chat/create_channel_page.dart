@@ -26,11 +26,11 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
       client: StreamApi.client,
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back_sharp),
+              onPressed: () => Get.off(() => MembersPage())),
           title: Text('Create Room'),
           actions: [
-            IconButton(
-                icon: Icon(Icons.arrow_back_sharp),
-                onPressed: () => Get.off(() => MembersPage())),
             IconButton(
               icon: Icon(Icons.done),
               onPressed: () async {
@@ -38,16 +38,14 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
                     .map((participant) => participant.uid)
                     .toList();
 
-                final channel = await StreamChannelApi.createChannel(
+                await StreamChannelApi.createChannel(
                   context,
                   name: name,
                   imageFile: imageFile,
                   idMembers: idParticipants,
                 );
 
-                Get.offAll((context) => ChatPage(
-                      user: [], channel: channel,
-                    ));
+                Get.offAll((context) => HomePageDesktop());
               },
             ),
             const SizedBox(width: 8),
@@ -114,9 +112,8 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
       ),
       maxLength: 30,
       onChanged: (value) => setState(() => name = value),
-      onFieldSubmitted: (value) =>
-          StreamChannelApi.createChannel(context,
-              name: value, imageFile: imageFile));
+      onFieldSubmitted: (value) => StreamChannelApi.createChannel(context,
+          name: value, imageFile: imageFile));
 
   Widget buildMembers() => Column(
         children: widget.members

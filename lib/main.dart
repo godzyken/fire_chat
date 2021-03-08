@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
     ThemeController.to.getThemeModeFromStore();
     return GetBuilder<LanguageController>(
       builder: (languageController) => StreamChatCore(
-        client: widget.client,
+        client: StreamApi.client,
         child: Loading(
           child: GetMaterialApp(
             locale: languageController.getLocale,

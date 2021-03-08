@@ -83,7 +83,7 @@ class StreamUserApi {
   static Future<UserToken> _generateUserToken({
     @required String idUser,
   }) async {
-    const urlAuthentication = 'http://localhost:5001/stream-chat-d5827-306316/us-central1/createToken';
+    const urlAuthentication = 'http://localhost:5000/flutterauth-demo/us-central1/createToken';
     final headers = <String, String>{
       'Content-Type': 'application/json',
     };

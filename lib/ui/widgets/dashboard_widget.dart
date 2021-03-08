@@ -14,8 +14,8 @@ class DashboardWidget extends StatelessWidget {
             child: IndexedStack(
               index: controller?.tabIndex,
               children: [
-                HomeUI(),
-                ChatHomePage(),
+                HomeUI(tabIndex: 0,),
+                ChatsPage(),
                 InterestFormUi(),
               ],
             ),

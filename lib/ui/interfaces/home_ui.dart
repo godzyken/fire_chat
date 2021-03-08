@@ -27,7 +27,7 @@ class _HomeUIState extends State<HomeUI> {
     final labels = AppLocalizations.of(context);
     ResponsiveBuilder(
       builder: (context, sizingInfo) => sizingInfo.isDesktop
-      ? HomePageDesktop() : HomePageMobile(tabIndex: widget.tabIndex),
+      ? HomePageDesktop() : HomeUI(tabIndex: widget.tabIndex),
     );
     return buildGetBuilder(labels);
   }
