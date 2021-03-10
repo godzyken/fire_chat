@@ -12,9 +12,11 @@ class ChatsPage extends StatefulWidget {
   _ChatsPageState createState() => _ChatsPageState();
 }
 
+
 class _ChatsPageState extends State<ChatsPage> {
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) =>
+      Scaffold(
         backgroundColor: Colors.blue,
         body: SafeArea(
           child: GestureDetector(
@@ -71,10 +73,12 @@ class _ChatsPageState extends State<ChatsPage> {
         ),
       );
 
-  Widget buildText(String text) => Center(
+  Widget buildText(String text) =>
+      Center(
         child: Text(
           text,
           style: TextStyle(fontSize: 24, color: Colors.white),
         ),
       );
 }
+

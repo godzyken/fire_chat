@@ -7,6 +7,5 @@ exports.generateToken = function(idUser, doneCallback) {
     const client = new StreamChat(apiKey, apiSecret);
     const token = client.createToken(idUser);
 
-
     doneCallback(token);
 };

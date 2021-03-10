@@ -14,9 +14,12 @@ class ChatsWidget extends StatelessWidget {
         }
       },
       sort: [SortOption('last_message_at', direction: SortOption.DESC)],
-      pagination: PaginationParams(limit: 20),
-      channelPreviewBuilder: (context, channel) =>
-          ChannelListWidget(channel: channel),
+      pagination: PaginationParams(limit: 10),
+      channelPreviewBuilder: (context, channel) => StreamChannel(
+          initialMessageId: channel.cid,
+          showLoading: true,
+          channel: channel,
+          child: ChannelListWidget(channel: channel)),
     );
   }
 }

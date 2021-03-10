@@ -18,11 +18,12 @@ class ChatPageMobile extends StatefulWidget {
 
 class _ChatPageMobileState extends State<ChatPageMobile> {
   final channelListController = ChannelListController();
+  final StreamChannelState state  = StreamChannelState();
 
 
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
   }
 
@@ -75,7 +76,7 @@ class _ChatPageMobileState extends State<ChatPageMobile> {
                   itemBuilder: (BuildContext context, int index) {
                     final _item = channels[index];
                     return ListTile(
-                      title: Text(_item.id),
+                      title: Text(_item.extraData['name']),
                       subtitle: StreamBuilder<Message>(
                         stream: _item.state.lastMessageStream,
                         initialData: _item.state.lastMessage,
@@ -112,11 +113,13 @@ class _ChatPageMobileState extends State<ChatPageMobile> {
   }
 
   Widget buildAppBar() {
-    final channelName = widget.channel.extraData['name'];
+    final channelName = widget.channel.state;
 
     return AppBar(
+      centerTitle: true,
       backgroundColor: Colors.white,
-      title: Text(channelName),
+      leading: BackButton(onPressed: () => Get.off(() => ChatsPage())),
+      title: Text(channelName?.channelState?.channel?.name),
       actions: [
         IconButton(
           onPressed: () {},

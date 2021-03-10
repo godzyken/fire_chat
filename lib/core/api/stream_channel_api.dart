@@ -14,21 +14,26 @@ class StreamChannelApi {
     @required String idUser,
     @required String username,
   }) async {
-    final idSelfUser = FirebaseAuth.instance.currentUser.uid;
+    final idSelfUser = FirebaseAuth.instance.currentUser;
     final filter = {
-      'name': '$username',
+      'type': 'messaging',
       "members": {
-        "\$in": [idUser, idSelfUser],
+        "\$in": [idUser, idSelfUser.uid],
       }
     };
 
-    final channels = await StreamApi.client.queryChannels(
+    final sort = [SortOption('last_message_at', direction: SortOption.DESC)];
+
+    final channels = StreamApi.client.queryChannels(
       filter: filter,
+      sort: sort,
+      preferOffline: true,
+      messageLimit: 20,
+      waitForConnect: true,
+      paginationParams: PaginationParams(limit: 10),
       options: {
         "watch": true,
         "state": true,
-        "limit": 20,
-        "offset": 10,
       },
     );
 
@@ -40,13 +45,14 @@ class StreamChannelApi {
     @required String name,
     @required File imageFile,
     List<String> idMembers = const [],
+    bool waitForConect = true,
   }) async {
     final idChannel = Uuid().v4();
 
     final urlImage =
         await FirebaseApi.uploadImage('images/$idChannel', imageFile);
 
-    return await createChannelWithUsers(
+    return createChannelWithUsers(
       context,
       name: name,
       urlImage: urlImage,
@@ -80,22 +86,4 @@ class StreamChannelApi {
     await channel.watch();
     return channel;
   }
-
-/* static Future<List<Channel>> getChannels({@required StreamChatState state}) async {
-    final filter = {
-      "type": "mobile",
-    };
-
-    final sort = [
-      SortOption(
-        "last_message_at",
-        direction: SortOption.DESC,
-      ),
-    ];
-
-    return await state.client.queryChannels(
-      filter: filter,
-      sort: sort,
-    );
-  }*/
 }

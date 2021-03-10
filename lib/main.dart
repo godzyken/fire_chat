@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:stream_chat_flutter_core/stream_chat_flutter_core.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 
 Future main() async {
@@ -20,6 +20,8 @@ Future main() async {
   await Firebase.initializeApp();
 
   final client = StreamApi.client;
+/*  final idUser = await AuthController.to?.firebaseUser?.value;
+  final token = await StreamUserApi.login(uid: idUser.uid);*/
   await client.connectUser(
     User(
       id: 'cool-shadow-7',
@@ -31,13 +33,19 @@ Future main() async {
     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiY29vbC1zaGFkb3ctNyJ9.gkOlCRb1qgy4joHPaxFwPOdXcGvSPvp6QY0S4mpRkVo',
   );
 
-  runApp(MyApp(client: client));
+  final channel = client.channel('messaging', id: 'godevs');
+
+  channel.watch();
+
+  runApp(MyApp(client: client, channel: channel));
 }
 
 class MyApp extends StatefulWidget {
   final StreamChatClient client;
 
-  const MyApp({Key key, @required this.client}) : super(key: key);
+  final Channel channel;
+
+  const MyApp({Key key, @required this.client, @required this.channel}) : super(key: key);
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -75,4 +83,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-

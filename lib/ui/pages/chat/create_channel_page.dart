@@ -24,6 +24,7 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
   @override
   Widget build(BuildContext context) => StreamChat(
       client: StreamApi.client,
+      onBackgroundEventReceived: (event) => widget.members,
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -32,20 +33,23 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
           title: Text('Create Room'),
           actions: [
             IconButton(
-              icon: Icon(Icons.done),
-              onPressed: () async {
-                final idParticipants = widget.members
-                    .map((participant) => participant.uid)
-                    .toList();
+                icon: Icon(Icons.done),
+                onPressed: () async {
+                  try {
+                    final idParticipants = widget.members
+                        .map((participant) => participant.uid)
+                        .toList();
 
-                await StreamChannelApi.createChannel(
-                  context,
-                  name: name,
-                  imageFile: imageFile,
-                  idMembers: idParticipants,
-                );
+                    await StreamChannelApi.createChannel(
+                      context,
+                      name: name,
+                      imageFile: imageFile,
+                      idMembers: idParticipants,
+                    ).then((context) =>  Get.offAll((context) => HomePageDesktop()));
+                  } catch (e) {
+                    print('error@@@@@@@@@@@@@@@@@: $e');
+                  }
 
-                Get.offAll((context) => HomePageDesktop());
               },
             ),
             const SizedBox(width: 8),

@@ -41,7 +41,8 @@ class _MembersPageState extends State<MembersPage> {
               onPressed: selectUsers.isEmpty
                   ? null
                   : () =>
-                      Get.offAll(() => CreateChannelPage(members: selectUsers)),
+                      Get.offAll(() =>  StreamChat(client: StreamApi.client,
+                          child: CreateChannelPage(members: selectUsers))),
             ),
             const SizedBox(width: 8),
           ],

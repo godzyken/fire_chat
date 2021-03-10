@@ -4,7 +4,6 @@ import 'package:fire_chat/ui/pages/chat/chat.dart';
 import 'package:fire_chat/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 class ActiveUsersRowWidget extends StatelessWidget {
   @override
@@ -60,12 +59,12 @@ class ActiveUsersRowWidget extends StatelessWidget {
               );
 
               GetBuilder(
-                builder: (context) => ChatPageMobile(channel: channel),
+                builder: (context) => ChatPageMobile(channel: channel,),
               );
             } else {
               GetBuilder(
                 builder: (context) =>
-                    ChatPageMobile(channel: currentChannel.first),
+                    ChatPageMobile(channel: null,),
               );
             }
           },

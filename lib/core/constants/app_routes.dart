@@ -1,13 +1,10 @@
 
-import 'dart:ui';
-
 import 'package:fire_chat/ui/pages/pages.dart';
 import 'package:fire_chat/ui/ui.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 class AppRoutes {
-  AppRoutes._(RouteSettings settings); //this is to prevent anyone from instantiating this object
+  AppRoutes._(); //this is to prevent anyone from instantiating this object
   static final routes = [
     GetPage(name: '/', page: () => SplashUI()),
     GetPage(name: '/sign-in', page: () => SignInUI()),

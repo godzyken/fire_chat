@@ -2,11 +2,15 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fire_chat/core/controllers/auth_controller.dart';
 import 'package:fire_chat/core/helpers/helpers.dart';
 import 'package:fire_chat/core/models/models.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseApi {
+
   static Stream<List<UserModel>> getUserModels() => FirebaseFirestore.instance
       .collection('users')
       .orderBy(UserModelField.lastActive, descending: true)
@@ -111,6 +115,21 @@ class FirebaseApi {
         .collection('users/$file/photoUrl');
 
     return ref.path;
+  }
+
+  static Future<bool> login() async {
+    final googleUser = GoogleSignIn.standard(scopes: ['email']);
+    if (googleUser == null) throw Exception('No user');
+
+    final googleAuth = await googleUser.currentUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken
+    );
+
+    final userCredential = await AuthController.to.firebaseUser.value.linkWithCredential(credential);
+
+    return userCredential.additionalUserInfo.isNewUser;
   }
 
 }

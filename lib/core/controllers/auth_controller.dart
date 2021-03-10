@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fire_chat/core/api/api.dart';
 import 'package:fire_chat/core/models/models.dart';
 import 'package:fire_chat/localizations.dart';
+import 'package:fire_chat/main.dart';
 import 'package:fire_chat/ui/components/components.dart';
 import 'package:fire_chat/ui/pages/pages.dart';
 import 'package:fire_chat/ui/ui.dart';
@@ -69,7 +70,7 @@ class AuthController extends GetxController {
     if (_firebaseUser == null) {
       Get.to(() => SignInUI());
     } else {
-      Get.to(() => HomeUI());
+      Get.to(() => HomeUI(tabIndex: null,));
     }
   }
 
@@ -175,7 +176,7 @@ class AuthController extends GetxController {
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
+      final credential = GoogleAuthProvider.credential(
           idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
       await _auth.signInWithCredential(credential).then((result) async {
@@ -518,6 +519,7 @@ class AuthController extends GetxController {
     _updateUserFbInfo();
 
     ever(firebaseUser, handleAuthChanged);
+
     firebaseUser.value = await getUser;
     firebaseUser.bindStream(user);
     super.onReady();
