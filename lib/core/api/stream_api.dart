@@ -13,6 +13,7 @@ class StreamApi {
   );
 
 
+
   static final chatPersistentClient = StreamChatPersistenceClient(
     logLevel: Level.INFO,
     connectionMode: ConnectionMode.background,

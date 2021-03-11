@@ -1,17 +1,20 @@
 import 'package:fire_chat/core/api/api.dart';
+import 'package:fire_chat/core/controllers/controllers.dart';
 import 'package:fire_chat/core/models/models.dart';
 import 'package:fire_chat/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 class ChatPage extends StatefulWidget {
-  final List<UserModel> user;
+  final List<UserModel> members;
+  final UserModel userModel;
+
   final Channel channel;
 
   const ChatPage({
-    @required this.user,
+    @required this.userModel,
     @required this.channel,
-    Key key,
+    Key key, this.members,
   }) : super(key: key);
 
   @override
@@ -19,6 +22,8 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  ChannelController controller = ChannelController.to;
+
   @override
   Widget build(BuildContext context) => widget.channel != null ? buildStreamChannel : buildStreamChat;
 
@@ -30,8 +35,14 @@ class _ChatPageState extends State<ChatPage> {
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            ProfileHeaderWidget(name: widget?.user?.first?.name),
             Expanded(
+              flex: 1,
+              child: ProfileHeaderWidget(
+                  name: widget.channel.config.name,
+              ),
+            ),
+            Expanded(
+              flex: 5,
               child: Container(
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -41,10 +52,12 @@ class _ChatPageState extends State<ChatPage> {
                     topRight: Radius.circular(25),
                   ),
                 ),
-                child: MessagesWidget(idUser: widget?.user?.single?.uid),
+                child: MessagesWidget(idUser: '${widget?.members?.iterator?.current?.uid}'),
               ),
             ),
-            NewMessageWidget(idUser: widget.user.single)
+            Expanded(
+              flex: 1,
+                child: NewMessageWidget(idUser: widget?.userModel))
           ],
         ),
       ),
@@ -59,8 +72,11 @@ class _ChatPageState extends State<ChatPage> {
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            ProfileHeaderWidget(name: widget?.user?.first?.name),
             Expanded(
+              flex: 1,
+              child: ProfileHeaderWidget(name: '${controller.channelName}'),),
+            Expanded(
+              flex: 4,
               child: Container(
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -70,10 +86,12 @@ class _ChatPageState extends State<ChatPage> {
                     topRight: Radius.circular(25),
                   ),
                 ),
-                child: MessagesWidget(idUser: widget?.user?.single?.uid),
+                child: MessagesWidget(idUser: widget?.members?.iterator?.current?.uid),
               ),
             ),
-            NewMessageWidget(idUser: widget.user.single)
+            Expanded(
+              flex: 1,
+                child: NewMessageWidget(idUser: widget?.userModel))
           ],
         ),
       ),

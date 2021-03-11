@@ -1,4 +1,5 @@
-
+import 'package:fire_chat/core/api/api.dart';
+import 'package:fire_chat/core/constants/app_themes.dart';
 import 'package:fire_chat/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,19 +12,16 @@ class ChatPageMobile extends StatefulWidget {
     @required this.channel,
   });
 
-
   @override
   _ChatPageMobileState createState() => _ChatPageMobileState();
 }
 
 class _ChatPageMobileState extends State<ChatPageMobile> {
   final channelListController = ChannelListController();
-  final StreamChannelState state  = StreamChannelState();
-
+  final StreamChannelState state = StreamChannelState();
 
   @override
   void initState() {
-
     super.initState();
   }
 
@@ -38,10 +36,7 @@ class _ChatPageMobileState extends State<ChatPageMobile> {
             'type': 'messaging',
             'members': {
               r'$in': [
-                StreamChatCore
-                    .of(context)
-                    .user
-                    .id,
+                StreamChatCore.of(context).user.id,
               ]
             }
           },
@@ -68,22 +63,24 @@ class _ChatPageMobileState extends State<ChatPageMobile> {
           listBuilder: (BuildContext context,
               List<Channel> channels,) =>
               LazyLoadScrollView(
-                onEndOfPage: () async {
-                  channelListController.paginateData();
-                },
-                child: ListView.builder(
-                  itemCount: channels.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final _item = channels[index];
-                    return ListTile(
-                      title: Text(_item.extraData['name']),
-                      subtitle: StreamBuilder<Message>(
-                        stream: _item.state.lastMessageStream,
-                        initialData: _item.state.lastMessage,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return Text(snapshot.data.text);
-                          }
+            onEndOfPage: () async {
+              channelListController.paginateData();
+            },
+            child: ListView.builder(
+              itemCount: channels.length,
+              itemBuilder: (BuildContext context, int index) {
+                final _item = channels[index];
+                return ListTile(
+                  leading:
+                      ProfileImageWidget(imageUrl: _item.extraData['image']),
+                  title: Text(_item.extraData['name']),
+                  subtitle: StreamBuilder<Message>(
+                    stream: _item.state.lastMessageStream,
+                    initialData: _item.state.lastMessage,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Text(snapshot.data.text);
+                      }
 
                           return SizedBox();
                         },
@@ -113,13 +110,13 @@ class _ChatPageMobileState extends State<ChatPageMobile> {
   }
 
   Widget buildAppBar() {
-    final channelName = widget.channel.state;
+    final channelName = widget?.channel;
 
     return AppBar(
       centerTitle: true,
       backgroundColor: Colors.white,
       leading: BackButton(onPressed: () => Get.off(() => ChatsPage())),
-      title: Text(channelName?.channelState?.channel?.name),
+      title: Obx(() => Text("$channelName")),
       actions: [
         IconButton(
           onPressed: () {},

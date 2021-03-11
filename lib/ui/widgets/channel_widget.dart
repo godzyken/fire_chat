@@ -1,22 +1,23 @@
-import 'package:fire_chat/core/models/models.dart';
 import 'package:fire_chat/ui/components/avatar.dart';
 import 'package:flutter/material.dart';
+import 'package:stream_chat/stream_chat.dart';
 
 class ChannelWidget extends StatelessWidget {
-  final ChannelModel channelModel;
+  final Channel channel;
   final bool isMe;
 
-  const ChannelWidget({@required this.channelModel, @required this.isMe});
+  const ChannelWidget({@required this.channel, @required this.isMe});
 
   @override
   Widget build(BuildContext context) {
     final radius = Radius.circular(12);
     final borderRadius = BorderRadius.all(radius);
+    final image = channel.extraData['image'];
 
     return Row(
       mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: <Widget>[
-        if (!isMe) Avatar(channelModel?.user),
+        if (!isMe) Avatar(image),
         Container(
           width: 250.0,
           height: 100.0,

@@ -2,6 +2,7 @@
 //https://github.com/fayaz07/ots
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 final _tKey = GlobalKey(debugLabel: 'overlay_parent');
 final _modalBarrierDefaultColor = Colors.black.withOpacity(0.7);
@@ -21,8 +22,9 @@ class Loading extends StatelessWidget {
   final Widget child;
   final Widget loader;
   final bool darkTheme;
+  final RxStatus rxStatus;
 
-  const Loading({Key key, this.child, this.loader, this.darkTheme = false})
+  const Loading({Key key, this.child, this.loader, this.darkTheme = false, this.rxStatus})
       : super(key: key);
 
   @override

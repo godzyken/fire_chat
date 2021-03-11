@@ -21,6 +21,13 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
   String name = '';
   File imageFile;
 
+  evictImage(String imageFile) {
+    final NetworkImage provider = NetworkImage(imageFile);
+    provider.evict().then<void>((bool success) {
+      if (success) debugPrint('removed image!');
+    });
+  }
+
   @override
   Widget build(BuildContext context) => StreamChat(
       client: StreamApi.client,
@@ -45,9 +52,11 @@ class _CreateChannelPageState extends State<CreateChannelPage> {
                       name: name,
                       imageFile: imageFile,
                       idMembers: idParticipants,
-                    ).then((context) =>  Get.offAll((context) => HomePageDesktop()));
+                    );
+
+                    Get.offAll(() => HomePageDesktop());
                   } catch (e) {
-                    print('error@@@@@@@@@@@@@@@@@: $e');
+                    print('error@@@@@@@@@@@@@@@@@: $e.printError()');
                   }
 
               },

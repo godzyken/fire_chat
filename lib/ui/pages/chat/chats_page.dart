@@ -50,9 +50,10 @@ class _ChatsPageState extends State<ChatsPage> {
                                     client: StreamApi.client,
                                     streamChatThemeData:
                                         StreamChatThemeData.getDefaultTheme(
-                                            AppThemes.darkTheme
+                                            AppThemes.lightTheme
                                         ),
                                     child: ChannelsBloc(
+                                      lockChannelsOrder: true,
                                         child: ChatsWidget()
                                     ),
                                 )

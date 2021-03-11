@@ -1,3 +1,7 @@
+
+import 'package:fire_chat/core/controllers/auth_controller.dart';
+import 'package:fire_chat/core/models/models.dart';
+import 'package:fire_chat/ui/pages/chat/chat.dart';
 import 'package:fire_chat/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
@@ -5,9 +9,15 @@ import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 class ChatsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final idUser = StreamChat.of(context)?.user?.id;
+    final idUser = StreamChat.of(context).user.id;
+    final client = StreamChat.of(context).client;
+    final type = 'messaging';
+    final channel = client.channel(type);
+    UserModel userModel;
+
 
     return ChannelListView(
+      onStartChatPressed: () => ChatPage(channel:channel, members: [], userModel: userModel,),
       filter: {
         'members': {
           '\$in': [idUser],
@@ -15,8 +25,8 @@ class ChatsWidget extends StatelessWidget {
       },
       sort: [SortOption('last_message_at', direction: SortOption.DESC)],
       pagination: PaginationParams(limit: 10),
+      channelWidget: ChannelWidget(channel: channel, isMe: true,),
       channelPreviewBuilder: (context, channel) => StreamChannel(
-          initialMessageId: channel.cid,
           showLoading: true,
           channel: channel,
           child: ChannelListWidget(channel: channel)),

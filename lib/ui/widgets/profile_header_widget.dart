@@ -1,5 +1,7 @@
+import 'package:fire_chat/core/controllers/channel_controller.dart';
 import 'package:fire_chat/ui/pages/chat/chat.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class ProfileHeaderWidget extends StatelessWidget {
@@ -9,6 +11,8 @@ class ProfileHeaderWidget extends StatelessWidget {
     @required this.name,
     Key key,
   }) : super(key: key);
+
+
 
   @override
   Widget build(BuildContext context) => Container(
@@ -26,6 +30,7 @@ class ProfileHeaderWidget extends StatelessWidget {
                 Expanded(
                   child: Text(
                     name,
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 24,
                       color: Colors.white,

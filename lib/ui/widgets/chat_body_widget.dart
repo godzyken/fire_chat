@@ -11,6 +11,7 @@ class ChatBodyWidget extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) => Expanded(
     child: Container(
@@ -34,7 +35,7 @@ class ChatBodyWidget extends StatelessWidget {
       return Container(
         height: 75,
         child: ListTile(
-          onTap: () => Get.offAll(() => ChatPage(user: [user],)),
+          onTap: () => Get.offAll(() => ChatPage(members: [user], userModel: user, channel: null,)),
           leading: CircleAvatar(
             radius: 25,
             backgroundImage: NetworkImage(user.photoUrl),

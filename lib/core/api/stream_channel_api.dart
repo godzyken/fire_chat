@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fire_chat/core/api/api.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_chat/stream_chat.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart' hide Channel;
@@ -22,7 +23,7 @@ class StreamChannelApi {
       }
     };
 
-    final sort = [SortOption('last_message_at', direction: SortOption.DESC)];
+    final sort = [SortOption<ChannelModel>('last_message_at', direction: SortOption.DESC)];
 
     final channels = StreamApi.client.queryChannels(
       filter: filter,
@@ -45,10 +46,11 @@ class StreamChannelApi {
     @required String name,
     @required File imageFile,
     List<String> idMembers = const [],
+    List<Message> idMessages = const [],
+    List<StreamChatClient> idClients = const [],
     bool waitForConect = true,
   }) async {
     final idChannel = Uuid().v4();
-
     final urlImage =
         await FirebaseApi.uploadImage('images/$idChannel', imageFile);
 
@@ -58,6 +60,8 @@ class StreamChannelApi {
       urlImage: urlImage,
       idMembers: idMembers,
       idChannel: idChannel,
+      idMessages: idMessages,
+      idClients: idClients,
     );
   }
 
@@ -66,24 +70,65 @@ class StreamChannelApi {
     @required String name,
     @required String urlImage,
     List<String> idMembers = const [],
+    StreamChatClient idClient,
     String idChannel,
+    List<Message> idMessages = const [],
+    Message idMessage,
+    String type,
+    List<StreamChatClient> idClients = const [],
   }) async {
-    final id = idChannel ?? Uuid().v4();
+    try {
+      final id = idChannel ?? Uuid().v4();
 
-    final idSelfUser = StreamChat.of(context).user.id;
-    final channel = StreamApi.client.channel(
-      'messaging',
-      id: id,
-      extraData: {
-        'name': name,
-        'image': urlImage,
-        'members': idMembers..add(idSelfUser),
-      },
-    );
+      final channelType = StreamChannel.of(context).channel.type;
+      final messages = StreamChannel.of(context).getMessage(idChannel);
+      final idSelfUser = StreamChat.of(context).user.id;
+      final idMessagesSend = StreamChat.of(context)
+          .user
+          .extraData[messages]
+          .client
+          .sendMessage(idMessage, idChannel, channelType);
+      final idClient = StreamChatClient(StreamApi.apiKey);
 
-    await channel.create();
+      final channel = StreamApi.client.channel(
+        channelType,
+        id: id,
+        extraData: {
+          'name': name,
+          'image': urlImage,
+          'members': idMembers..add(idSelfUser),
+          'messages': idMessages..add(idMessagesSend),
+          'clients': idClients..add(idClient),
+        },
+      );
 
-    await channel.watch();
-    return channel;
+      await channel.create();
+
+      await channel.watch();
+      return channel;
+    } catch (e) {
+      print('wOAAAAAAApen : $e');
+    }
+    return null;
   }
+
+  static Future<Channel> getOrCreateUsers(
+    BuildContext context, {
+    @required String idChannel,
+    @required Channel idCurrentChannel,
+  }) async {
+    bool isLogging;
+    final isCurrentChannel = StreamChannel.of(context).channel.cid;
+    if (isCurrentChannel == null) {
+      isLogging = true;
+      final createOne = await createChannel(context,
+          name: idChannel, imageFile: idCurrentChannel.extraData['image']);
+      isLogging = false;
+      return createOne;
+    } else {
+      isLogging = false;
+      throw ErrorWidget.builder;
+    }
+  }
+
 }

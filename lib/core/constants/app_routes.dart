@@ -20,7 +20,7 @@ class AppRoutes {
     GetPage(name: '/hextris-page', page: () => Hextris()),
     GetPage(name: '/bubble-page', page: () => BubbleGame3()),
     GetPage(name: '/game-list', page: () => GameList()),
-    GetPage(name: '/chat-page', page: () => ChatPage(user: null, channel: null,)),
+    GetPage(name: '/chat-page', page: () => ChatPage(userModel: null, channel: null, members: [],)),
     GetPage(name: '/chat-page-mobile', page: () => ChatPageMobile(channel: null,)),
     GetPage(name: '/chats-page', page: () => ChatsPage()),
     GetPage(name: '/create-channel', page: () => CreateChannelPage(members: [])),

@@ -4,6 +4,7 @@ import 'package:fire_chat/ui/pages/chat/chat.dart';
 import 'package:fire_chat/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stream_chat/stream_chat.dart';
 
 class ActiveUsersRowWidget extends StatelessWidget {
   @override
@@ -58,8 +59,8 @@ class ActiveUsersRowWidget extends StatelessWidget {
                 idMembers: [user.uid],
               );
 
-              GetBuilder(
-                builder: (context) => ChatPageMobile(channel: channel,),
+
+              Get.offAll(() => ChatPage(channel: channel, userModel: user, members: [],),
               );
             } else {
               GetBuilder(

@@ -51,7 +51,7 @@ class ChatHeaderWidget extends StatelessWidget {
                 return Container(
                   margin: const EdgeInsets.only(right: 12),
                   child: GestureDetector(
-                    onTap: () => Get.offAll(() => ChatPage(user: [user], channel: null,)),
+                    onTap: () => Get.offAll(() => ChatPage(userModel: user, members: [], channel: null)),
                     child: CircleAvatar(
                       radius: 24,
                       backgroundImage: (user?.photoUrl == null) ? AssetImage('assets/avatar/gaïmaito.jpg') : NetworkImage(user?.photoUrl),
