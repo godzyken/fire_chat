@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fire_chat/core/api/api.dart';
 import 'package:fire_chat/core/models/models.dart';
 import 'package:fire_chat/localizations.dart';
-import 'package:fire_chat/main.dart';
 import 'package:fire_chat/ui/components/components.dart';
 import 'package:fire_chat/ui/pages/pages.dart';
 import 'package:fire_chat/ui/ui.dart';
@@ -33,6 +32,9 @@ class AuthController extends GetxController {
       apiSecretKey: TwitterApi.secret,
       redirectURI: TwitterApi.redirecTo);
 
+/*  //Variable StreamChat
+  final Str.StreamChatClient client = StreamApi.client;*/
+
   //Variables stream logic for
   Rx<User> firebaseUser = Rx<User>();
   Rx<UserModel> firestoreUser = Rx<UserModel>();
@@ -50,7 +52,7 @@ class AuthController extends GetxController {
   //Streams the firestore user from the firestore collection
   Stream<UserModel> streamFirestoreUser() {
     if (firebaseUser?.value?.uid != null) {
-      print(firebaseUser.value.uid);
+
       return FirebaseFirestore.instance
           .doc('/users/${firebaseUser.value.uid}')
           .snapshots()
@@ -64,6 +66,7 @@ class AuthController extends GetxController {
     //get user data from firestore
     if (_firebaseUser?.uid != null) {
       firestoreUser.bindStream(streamFirestoreUser());
+      await StreamUserApi.login(uid: _firebaseUser?.uid);
       await isAdmin();
     }
 
@@ -265,7 +268,7 @@ class AuthController extends GetxController {
             await StreamUserApi.createUser(
                 uid: result.user.uid,
                 username: result.user.displayName,
-                urlImage: result.user.photoURL).then((value) => StreamUserApi.login(uid: value));
+                urlImage: result.user.photoURL);
 
             final resultA = await StreamUserApi.login(uid: result.user.uid);
 
@@ -342,8 +345,9 @@ class AuthController extends GetxController {
                 username: result.user.displayName,
                 urlImage: result.user.photoURL);
 
-            await StreamUserApi.login(uid: result.user.uid);
+            final resultA = await StreamUserApi.login(uid: result.user.uid);
 
+            print('facebook create token : $resultA');
 
             update();
 
@@ -361,17 +365,6 @@ class AuthController extends GetxController {
           break;
       }
     } catch (e) {}
-  }
-
-  // Get PhotoUrl for Profile avatar
-  getPhotoUrl() {
-    final _auth = FirebaseAuth.instance;
-
-    if (_auth.currentUser.photoURL != null) {
-      return Image.network(_auth.currentUser.photoURL, height: 100, width: 100);
-    } else {
-      return Icon(Icons.account_circle, size: 100);
-    }
   }
 
   //Method to update facebook user info
@@ -522,6 +515,7 @@ class AuthController extends GetxController {
 
     firebaseUser.value = await getUser;
     firebaseUser.bindStream(user);
+
     super.onReady();
   }
 

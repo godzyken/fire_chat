@@ -3,10 +3,14 @@ targets:
     sources:
       - "node/**"
       - "lib/**"
+      - "test/**"
     builders:
+      dirk_code_builder:
+        enabled: True
       build_node_compilers|entrypoint:
         generate_for:
           - node/**
+          - lib/**
         options:
           compiler: dart2js
           # List any dart2js specific args here, or omit it.

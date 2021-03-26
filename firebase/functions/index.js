@@ -1,4 +1,5 @@
 const functions = require("firebase-functions");
+const key = functions.config().stripe.key;
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions

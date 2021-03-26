@@ -1,4 +1,3 @@
-import 'package:fire_chat/core/controllers/channel_controller.dart';
 import 'package:fire_chat/ui/pages/chat/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -12,17 +11,16 @@ class ProfileHeaderWidget extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
-
-
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(BuildContext context) =>
+      Container(
         height: 80,
         padding: EdgeInsets.all(16).copyWith(left: 0),
         child: Column(
-          children: [
+          children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+              children: <Widget>[
                 BackButton(
                   color: Colors.white,
                   onPressed: () => Get.off(() => ChatsPage()),
@@ -41,7 +39,7 @@ class ProfileHeaderWidget extends StatelessWidget {
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
+                  children: <Widget>[
                     buildIcon(Icons.call),
                     SizedBox(width: 12),
                     buildIcon(Icons.videocam),
@@ -54,9 +52,10 @@ class ProfileHeaderWidget extends StatelessWidget {
         ),
       );
 
-  Widget buildIcon(IconData icon) => GestureDetector(
-    onTap: () => Get.offAll(() => MembersPage()),
-    child: Container(
+  Widget buildIcon(IconData icon) =>
+      GestureDetector(
+        onTap: () => Get.offAll(() => MembersPage()),
+        child: Container(
           padding: EdgeInsets.all(5),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -64,5 +63,5 @@ class ProfileHeaderWidget extends StatelessWidget {
           ),
           child: Icon(icon, size: 25, color: Colors.white),
         ),
-  );
+      );
 }

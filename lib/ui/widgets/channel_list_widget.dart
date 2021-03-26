@@ -1,7 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fire_chat/core/api/api.dart';
 import 'package:fire_chat/core/models/models.dart';
 import 'package:fire_chat/ui/pages/chat/chat.dart';
-import 'package:fire_chat/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
@@ -24,13 +24,7 @@ class ChannelListWidget extends StatelessWidget {
     final hasMessage = channel.state.messages.isNotEmpty;
     final lastMessage = hasMessage ? channel.state.messages.last.text : '';
     final lastMessageAt = _formatDateTime(channel.lastMessageAt);
-
-    evictImage(String urlImage) {
-      final NetworkImage provider = NetworkImage(urlImage);
-      provider.evict().then<void>((bool success) {
-        if (success) debugPrint('removed image!');
-      });
-    }
+    final opacity = channel.state.unreadCount > .0 ? 1.0 : 0.5;
 
     return StreamChat(
         client: StreamApi.client,
@@ -41,6 +35,7 @@ class ChannelListWidget extends StatelessWidget {
           urlImage: urlImage,
           lastMessage: lastMessage,
           lastMessageAt: lastMessageAt,
+          opacity: opacity,
           members: memberIds,
         ));
   }
@@ -53,6 +48,7 @@ class ChannelListWidget extends StatelessWidget {
     @required String lastMessage,
     @required String lastMessageAt,
     @required String members,
+    @required double opacity,
     UserModel userModel,
   }) =>
       ListTile(
@@ -61,10 +57,17 @@ class ChannelListWidget extends StatelessWidget {
               members: [],
               userModel: userModel,
             )),
-        leading: ProfileImageWidget(imageUrl: urlImage),
-        title: Text(
-          name,
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.yellow),
+        leading: CachedNetworkImage(
+          imageUrl: "http://via.placeholder.com/200x150",
+          imageBuilder: (context, imageProvider) => ChannelImage(channel: channel),
+          placeholder: (context, url) => CircularProgressIndicator(),
+          errorWidget: (context, url, error) => Icon(Icons.error),
+        ),
+        title: ChannelName(
+          textStyle:
+              StreamChatTheme.of(context).channelPreviewTheme.title.copyWith(
+                    color: Colors.black.withOpacity(opacity),
+                  ),
         ),
         subtitle: Row(
           children: [

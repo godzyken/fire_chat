@@ -19,7 +19,7 @@ class HomePageDesktop extends StatelessWidget {
             Expanded(child: buildChats(context)),
             VerticalDivider(
                 indent: 0, endIndent: 0, thickness: 0.5, width: 0.5),
-            Expanded(flex: 3, child: buildChat(selectedChannel))
+            // Expanded(flex: 0, child: buildChat(selectedChannel))
           ],
         ),
       ),

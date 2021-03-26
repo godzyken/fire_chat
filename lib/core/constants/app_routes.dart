@@ -24,6 +24,8 @@ class AppRoutes {
     GetPage(name: '/chat-page-mobile', page: () => ChatPageMobile(channel: null,)),
     GetPage(name: '/chats-page', page: () => ChatsPage()),
     GetPage(name: '/create-channel', page: () => CreateChannelPage(members: [])),
+    GetPage(name: '/channel-list', page: () => ChannelListPage()),
+    GetPage(name: '/channel', page: () => ChannelPage()),
     GetPage(name: '/add-members', page: () => MembersPage()),
 
     GetPage(name: '/profile', page: () => InterestFormUi()),

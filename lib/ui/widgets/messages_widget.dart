@@ -1,5 +1,5 @@
 import 'package:fire_chat/core/api/api.dart';
-import 'package:fire_chat/core/controllers/auth_controller.dart';
+import 'package:fire_chat/core/controllers/controllers.dart';
 import 'package:fire_chat/core/models/models.dart';
 import 'package:fire_chat/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ class MessagesWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) => StreamBuilder<List<Message>>(
+  Widget build(BuildContext context) => StreamBuilder<List<MessageModel>>(
         stream: FirebaseApi.getMessages(idUser),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
@@ -33,10 +33,9 @@ class MessagesWidget extends StatelessWidget {
                         itemCount: messages.length,
                         itemBuilder: (context, index) {
                           final message = messages[index];
-
                           return MessageWidget(
                             message: message,
-                            isMe: message.idUser == AuthController.to?.firebaseUser?.value?.uid,
+                            isMe: message?.id == AuthController.to.firebaseUser.value.uid,
                           );
                         },
                       );

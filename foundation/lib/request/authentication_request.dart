@@ -1,17 +1,16 @@
-import 'package:meta/meta.dart';
 
 class AuthenticationRequest {
   final String idUser;
 
   const AuthenticationRequest({
-    @required this.idUser,
+    required this.idUser,
   });
 
   AuthenticationRequest copy({
-    String idUser,
+    required String idUser,
   }) =>
       AuthenticationRequest(
-        idUser: idUser ?? this.idUser,
+        idUser: idUser,
       );
 
   static AuthenticationRequest fromJson(Map<String, dynamic> json) =>

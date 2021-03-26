@@ -46,8 +46,6 @@ dependencies:
   image_picker:
   twitter_login:
   flutter_webview_plugin:
-  story_view:
-  timeago:
   foundation:
     path: foundation/
 

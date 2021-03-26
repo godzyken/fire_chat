@@ -4,7 +4,7 @@ import 'package:fire_chat/ui/pages/chat/chat.dart';
 import 'package:fire_chat/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:stream_chat/stream_chat.dart';
+
 
 class ActiveUsersRowWidget extends StatelessWidget {
   @override
@@ -80,7 +80,8 @@ class ActiveUsersRowWidget extends StatelessWidget {
                 user.name,
                 maxLines: 2,
                 textAlign: TextAlign.center,
-              )
+                style: TextStyle(fontSize: 14, color: Colors.yellow),
+              ),
             ],
           ),
         ),
@@ -100,7 +101,7 @@ class ActiveUsersRowWidget extends StatelessWidget {
               ),
               Text(
                 'Create\nRoom',
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.yellowAccent),
               ),
             ],
           ),

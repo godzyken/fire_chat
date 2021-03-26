@@ -11,7 +11,7 @@ class ChannelModel {
   final String name;
   final String t;
   final List<String> usernames;
-  final Message msgs;
+  final MessageModel msgs;
   final UserModel user;
   final DateTime ts;
   final HobbiesModel hobbies;
@@ -31,7 +31,7 @@ class ChannelModel {
     final String name,
     final String t,
     final List<String> usernames,
-    final Message msgs,
+    final MessageModel msgs,
     final UserModel user,
     final HobbiesModel hobbies,
     final DateTime ts,

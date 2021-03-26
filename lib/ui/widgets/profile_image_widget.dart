@@ -12,12 +12,14 @@ class ProfileImageWidget extends StatelessWidget {
     this.radius = 20,
   }) : super(key: key);
 
+/*
   evictImage(String imageUrl) {
     final NetworkImage provider = NetworkImage(imageUrl);
     provider.evict().then<void>((bool success) {
       if (success) debugPrint('removed image!');
     });
   }
+*/
 
   @override
   Widget build(BuildContext context) => CircleAvatar(

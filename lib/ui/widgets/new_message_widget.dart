@@ -1,12 +1,16 @@
 import 'package:fire_chat/core/api/api.dart';
+import 'package:fire_chat/core/api/stream_message_api.dart';
+import 'package:fire_chat/core/controllers/auth_controller.dart';
 import 'package:fire_chat/core/models/models.dart';
 import 'package:flutter/material.dart';
 
 class NewMessageWidget extends StatefulWidget {
-  final UserModel idUser;
+  final String idUser;
+  final UserModel userModel;
 
   const NewMessageWidget({
     @required this.idUser,
+    @required this.userModel,
     Key key,
   }) : super(key: key);
 
@@ -21,7 +25,7 @@ class _NewMessageWidgetState extends State<NewMessageWidget> {
   void sendMessage() async {
     FocusScope.of(context).unfocus();
 
-    await FirebaseApi.uploadMessage(widget.idUser, message);
+    await FirebaseApi.uploadMessage(widget?.userModel, message);
 
     _controller.clear();
   }

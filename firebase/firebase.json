@@ -3,11 +3,21 @@
     "functions": {
       "port": 5001
     },
+    "hosting": {
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
     "ui": {
       "enabled": true
     },
     "firestore": {
-      "port": 8080
+      "port": 8080,
+      "rules": "firestore.rules",
+      "indexes": "firestore.indexes.json"
     }
   },
   "functions": {

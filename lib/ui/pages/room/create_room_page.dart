@@ -23,8 +23,20 @@ class CreateRoomPage extends StatefulWidget {
 class _CreateRoomPageState extends State<CreateRoomPage> {
   String name = '';
   File imageFile;
+  final picker = ImagePicker();
 
   int tabIndex;
+
+  Future getImage() async {
+    PickedFile pickedFile =
+    await picker.getImage(source: ImageSource.gallery);
+
+    if (pickedFile == null) return;
+
+    setState(() {
+      imageFile = File(pickedFile.path);
+    });
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -56,14 +68,7 @@ class _CreateRoomPageState extends State<CreateRoomPage> {
           children: [
             GestureDetector(
               onTap: () async {
-                final pickedFile =
-                    await ImagePicker().getImage(source: ImageSource.gallery);
-
-                if (pickedFile == null) return;
-
-                setState(() {
-                  imageFile = File(pickedFile.path);
-                });
+                await getImage();
               },
               child: buildImage(context),
             ),

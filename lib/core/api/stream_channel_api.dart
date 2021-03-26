@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:fire_chat/core/api/api.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_chat/stream_chat.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart' hide Channel;
@@ -23,12 +22,13 @@ class StreamChannelApi {
       }
     };
 
-    final sort = [SortOption<ChannelModel>('last_message_at', direction: SortOption.DESC)];
+    final sort = [
+      SortOption<ChannelModel>('last_message_at', direction: SortOption.DESC)
+    ];
 
     final channels = StreamApi.client.queryChannels(
       filter: filter,
       sort: sort,
-      preferOffline: true,
       messageLimit: 20,
       waitForConnect: true,
       paginationParams: PaginationParams(limit: 10),
@@ -46,11 +46,10 @@ class StreamChannelApi {
     @required String name,
     @required File imageFile,
     List<String> idMembers = const [],
-    List<Message> idMessages = const [],
-    List<StreamChatClient> idClients = const [],
     bool waitForConect = true,
   }) async {
     final idChannel = Uuid().v4();
+
     final urlImage =
         await FirebaseApi.uploadImage('images/$idChannel', imageFile);
 
@@ -60,8 +59,6 @@ class StreamChannelApi {
       urlImage: urlImage,
       idMembers: idMembers,
       idChannel: idChannel,
-      idMessages: idMessages,
-      idClients: idClients,
     );
   }
 
@@ -117,12 +114,14 @@ class StreamChannelApi {
     @required String idChannel,
     @required Channel idCurrentChannel,
   }) async {
-    bool isLogging;
+    bool isLogging = false;
     final isCurrentChannel = StreamChannel.of(context).channel.cid;
     if (isCurrentChannel == null) {
       isLogging = true;
       final createOne = await createChannel(context,
-          name: idChannel, imageFile: idCurrentChannel.extraData['image']);
+          name: idChannel,
+          imageFile: idCurrentChannel.extraData['image'],
+      );
       isLogging = false;
       return createOne;
     } else {
@@ -131,4 +130,14 @@ class StreamChannelApi {
     }
   }
 
+  static Future<Channel> watchChannel(
+    StreamChatClient client, {
+    @required String type,
+    @required String id,
+  }) async {
+    final channel = client.channel(type, id: id);
+
+    channel.watch();
+    return channel;
+  }
 }

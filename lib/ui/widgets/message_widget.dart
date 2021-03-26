@@ -2,7 +2,7 @@ import 'package:fire_chat/core/models/models.dart';
 import 'package:flutter/material.dart';
 
 class MessageWidget extends StatelessWidget {
-  final Message message;
+  final MessageModel message;
   final bool isMe;
 
   const MessageWidget({
@@ -14,13 +14,14 @@ class MessageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final radius = Radius.circular(12);
     final borderRadius = BorderRadius.all(radius);
+    final imageUrl = message.extraData['image'];
 
     return Row(
       mainAxisAlignment: !isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: <Widget>[
         if (!isMe)
           CircleAvatar(
-              radius: 16, backgroundImage: NetworkImage(message.urlAvatar)),
+              radius: 16, backgroundImage: NetworkImage(imageUrl)),
         Container(
           padding: EdgeInsets.all(16),
           margin: EdgeInsets.all(16),

@@ -1,5 +1,3 @@
-import 'package:fire_chat/core/api/api.dart';
-import 'package:fire_chat/core/constants/app_themes.dart';
 import 'package:fire_chat/ui/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -60,8 +58,10 @@ class _ChatPageMobileState extends State<ChatPageMobile> {
                   'Oh no, something went wrong. Please check your config.'),
             );
           },
-          listBuilder: (BuildContext context,
-              List<Channel> channels,) =>
+          listBuilder: (
+            BuildContext context,
+            List<Channel> channels,
+          ) =>
               LazyLoadScrollView(
             onEndOfPage: () async {
               channelListController.paginateData();
@@ -82,28 +82,27 @@ class _ChatPageMobileState extends State<ChatPageMobile> {
                         return Text(snapshot.data.text);
                       }
 
-                          return SizedBox();
-                        },
+                      return SizedBox();
+                    },
+                  ),
+                  onTap: () {
+                    /// Display a list of messages when the user taps on an item.
+                    /// We can use [StreamChannel] to wrap our [MessageScreen] screen
+                    /// with the selected channel.
+                    ///
+                    /// This allows us to use a built-in inherited widget for accessing
+                    /// our `channel` later on.
+                    GetBuilder(
+                      builder: (context) => StreamChannel(
+                        channel: _item,
+                        child: MessagesWidget(idUser: _item.cid),
                       ),
-                      onTap: () {
-                        /// Display a list of messages when the user taps on an item.
-                        /// We can use [StreamChannel] to wrap our [MessageScreen] screen
-                        /// with the selected channel.
-                        ///
-                        /// This allows us to use a built-in inherited widget for accessing
-                        /// our `channel` later on.
-                        GetBuilder(
-                            builder: (context) =>
-                                StreamChannel(
-                                  channel: _item,
-                                  child: MessagesWidget(idUser: _item.cid),
-                                ),
-                        );
-                      },
                     );
                   },
-                ),
-              ),
+                );
+              },
+            ),
+          ),
         ),
       ),
     );

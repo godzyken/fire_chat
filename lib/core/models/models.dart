@@ -1,4 +1,4 @@
-export 'message.dart';
+export 'message_model.dart';
 export 'user_model.dart';
 export 'menu_option_model.dart';
 export 'channel_model.dart';

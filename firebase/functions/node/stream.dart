@@ -4,19 +4,18 @@ library stream;
 import 'dart:async';
 
 import 'package:js/js.dart';
-import 'package:meta/meta.dart';
 import 'package:node_interop/node.dart';
 import 'package:node_interop/util.dart';
 
 @JS()
 @anonymous
 abstract class Stream {
-  external void generateToken(String idUser, doneCallback);
+  external dynamic get generateToken;
 }
 
 Future<String> generateToken({
-  @required String idUser,
-}) {
+  required String? idUser,
+}) async {
   final stream = require('./stream.js');
 
   final completer = Completer();

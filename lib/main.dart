@@ -52,9 +52,10 @@ Future main() async {
   }*/
 
   );
-  await channel.create();
 
   channel.watch();
+
+  await channel.watch();
 
   runApp(MyApp(client: client, channel: channel));
 }
@@ -76,7 +77,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     ThemeController.to.getThemeModeFromStore();
     Get.config(
-       defaultTransition: Transition.cupertino,
+      defaultTransition: Transition.cupertino,
       enableLog: true,
       defaultPopGesture: true,
     );
