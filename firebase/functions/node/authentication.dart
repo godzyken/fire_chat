@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:firebase_functions_interop/firebase_functions_interop.dart';
+import "package:node_preamble/preamble.dart" as preamble;
 import 'package:foundation/model/user_token.dart';
 import 'package:foundation/request/authentication_request.dart';
 import 'package:foundation/request/authentication_response.dart';
@@ -205,6 +206,5 @@ class Authentication {
 
   static bool _isControlFlowElement(AstNode node) =>
       node is IfElement || node is ForElement;
-
 
 }

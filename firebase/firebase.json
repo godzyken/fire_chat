@@ -12,7 +12,8 @@
       ]
     },
     "ui": {
-      "enabled": true
+      "enabled": true,
+      "port": 4000
     },
     "firestore": {
       "port": 8080,
@@ -29,5 +30,13 @@
   },
   "remoteconfig": {
     "template": "remoteconfig.template.json"
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
   }
 }

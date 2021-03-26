@@ -4,10 +4,9 @@ targets:
       - "node/**"
       - "lib/**"
       - "test/**"
+      - $packages$
     builders:
-      dirk_code_builder:
-        enabled: True
-      build_node_compilers|entrypoint:
+      node_preamble:
         generate_for:
           - node/**
           - lib/**
